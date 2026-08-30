@@ -12,39 +12,41 @@ The project directory layout is organized as follows:
 
 ```text
 prolixo/
-├── estrategia_prolixo.md       # Strategic development plan & architecture
-├── Makefile                    # Local workflow automation & container lifecycle
+├── INFRASTRUCTURE.md           # Canonical infrastructure architecture & Makefile specification
+├── Makefile                    # Single control plane for local automation (native & Docker)
 ├── README.md                   # Project documentation & reference guide
+├── roadmap.md                  # Project milestones & completed roadmap
 │
-├── api/                        # FastAPI Backend & OpenAPI Documentation
+├── api/                        # FastAPI Backend API
 │   ├── app/
 │   │   ├── __init__.py
-│   │   ├── main.py             # API routes, OpenAPI Swagger metadata & CORS configuration
-│   │   ├── models.py           # Pydantic schemas & input validation
+│   │   ├── main.py             # API routes & CORS configuration
+│   │   ├── models.py           # Pydantic request/response schemas
 │   │   └── generator/          # Statistical natural language generation engine
 │   │       ├── __init__.py
 │   │       ├── engine.py       # CFG and Markov generation algorithms
-│   │       └── dicts/          # Static lexicon and theme corpora
+│   │       ├── noise.py        # Grammar and orthographical error injection engine
+│   │       └── dicts/          # Lexicon decks & domain corpora
 │   │           ├── __init__.py
-│   │           ├── themes.py   # Specialized domain themes (Ecology, Law, Medicine, Mining, Politics, Technology)
-│   │           ├── pt.py       # Portuguese corporate/formal lexicon
-│   │           ├── en.py       # English corporate/formal lexicon
-│   │           ├── es.py       # Spanish corporate/formal lexicon
-│   │           └── la.py       # Classical Cicero Latin sentences
+│   │           ├── pt.py       # Portuguese CFG grammatical decks (gender/number tagged nouns, verbs, adj)
+│   │           ├── en.py       # English CFG grammatical decks (singular/plural tagged nouns, verbs, adj)
+│   │           ├── es.py       # Spanish CFG grammatical decks (gender/number tagged nouns, verbs, adj)
+│   │           ├── fr.py       # French CFG grammatical decks (gender/number tagged nouns, verbs, adj)
+│   │           ├── la.py       # Classical Latin corpus sentences (Cicero) for Markov Chain generation
+│   │           └── themes.py   # Domain vocabulary overrides (Business, Ecology, Law, Medicine, Mining, Politics, Tech)
 │   ├── requirements.txt        # Python dependencies
-│   └── run.py                  # API development startup script
+│   └── run.py                  # API development server entry point
 │
 └── frontend/                   # Next.js Web Interface
-    ├── package.json            # NPM dependencies (Next.js, React, Radix UI, Lucide)
+    ├── package.json            # Dependencies (Next.js, React, Radix UI, Lucide)
     ├── tsconfig.json           # TypeScript compiler configuration
     ├── tailwind.config.js      # Tailwind CSS configuration + tailwindcss-radix plugin
     ├── postcss.config.js       # PostCSS stylesheet processing
-    ├── next-env.d.ts           # Next.js type definitions
     └── src/
         └── app/
             ├── globals.css     # Global stylesheets and theme tokens (Light/Dark Mode)
             ├── layout.tsx      # Root HTML layout and metadata
-            └── page.tsx        # SPA interface (generator controls and text viewer)
+            └── page.tsx        # Responsive Web SPA interface
 ```
 
 ---
@@ -101,7 +103,3 @@ make setup-dev
   ```
 
 
----
-
-## 💡 Fallback Engine & Offline Resilience
-The Next.js frontend contains an **integrated client-side fallback engine**. If the frontend is run while the FastAPI backend is temporarily unavailable, it automatically switches to a local in-browser simulation engine with equivalent linguistic output rules. This ensures continuous usability during offline workflows and UI prototyping.

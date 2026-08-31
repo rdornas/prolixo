@@ -29,8 +29,7 @@ Development follows **TDD (Test-Driven Development)**: every feature, fix, and b
 - **"Passo Curto" (Short Step)**: Create/switch to a branch and commit the changes locally. (No push, no PR).
 - **"Passo Longo" (Long Step)**: Create/switch to a branch, commit the changes, push the branch to the remote repository, and open a Pull Request (PR) targeting `main`.
   - **Pre-Push Documentation Updates**: Before executing the push, review if project documentation files ([`roadmap.md`](roadmap.md), [`INFRASTRUCTURE.md`](INFRASTRUCTURE.md), [`README.md`](README.md)) need updates to reflect the changes. When applicable, update and commit these files before pushing.
-  - **PR Content**: The PR description MUST include a clear summary of what was done and the specific automated tests executed.
-- **Autonomous Execution Permission**: When the user requests or authorizes a "Passo Curto" or "Passo Longo" in the conversation, the agent is **fully authorized** to execute whatever operations are necessary to complete that workflow end-to-end (e.g. branch creation, local commits, automated test runs, documentation updates, and `git push` to the remote branch) directly and autonomously without asking repetitive conversational permission questions.
+- **Autonomous Execution Permission**: When the user requests or authorizes a "Passo Curto" or "Passo Longo" in the conversation, the agent is **fully and broadly authorized** to execute whatever operations are necessary to complete that workflow end-to-end (including branch creation, `.git` modifications, local staging and commits, automated test runs, documentation updates, and `git push` to remote repositories outside sandbox isolation via `BypassSandbox: true`) directly, autonomously, and without asking repetitive conversational permission questions.
 
 
 ## Action Boundaries & Permissions
@@ -73,9 +72,10 @@ Development follows **TDD (Test-Driven Development)**: every feature, fix, and b
 7. **No Absolute Local Paths**:
    - **NEVER hardcode local machine absolute file paths** (e.g., `/Users/username/...`, `C:\Users\...`, `file:///Users/...`) in any codebase files, source code, comments, documentation, Markdown files, configuration files, Dockerfiles, or scripts. Always use relative repository paths to ensure portability across different developer environments and projects.
 8. **Sandbox Bypass & External Permission Requests**:
-   - Every time an action or command requires extrapolating or bypassing the sandbox (such as running commands with `BypassSandbox: true` or triggering an external permission prompt), you MUST output a visible explanation in the chat **BEFORE** triggering the tool call/modal. The explanation must detail:
+   - For pre-authorized workflows (such as user-requested "Passo Curto" and "Passo Longo", Git branch operations, local commits, remote push, and standard test executions), the agent has standing authorization to execute outside the sandbox (`BypassSandbox: true`) whenever required by the OS/runtime environment.
+   - For unexpected, potentially destructive, or non-routine actions requiring sandbox extrapolation, provide a clear explanation detailing:
      1. *Action/Command*: The exact command or operation to be run.
-     2. *Justification*: Why sandbox extrapolation is strictly required (e.g., remote network connection for Git push, external authentication, etc.).
+     2. *Justification*: Why sandbox extrapolation is strictly required (e.g., external authentication, remote network calls).
      3. *Expected Outcome*: What the operation will accomplish once approved.
 
 

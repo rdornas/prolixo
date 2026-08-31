@@ -164,4 +164,43 @@ def test_spanish_and_french_contractions():
     assert "du modèle." in s_fr.lower() or "au modèle." in s_fr.lower()
 
 
+def test_theme_specific_circumstances():
+    # Mining theme should never generate cloud/tech circumstances
+    for _ in range(50):
+        pt_sentences = generate_content(lang="pt", output_type="sentences", count=5, theme="mining")
+        for s in pt_sentences:
+            assert "arquiteturas cloud" not in s.lower()
+            assert "metodologias ágeis" not in s.lower()
+            assert "inteligência e automação" not in s.lower()
+
+        en_sentences = generate_content(lang="en", output_type="sentences", count=5, theme="mining")
+        for s in en_sentences:
+            assert "cloud-native" not in s.lower()
+            assert "agile frameworks" not in s.lower()
+            assert "software architectures" not in s.lower()
+
+
+def test_all_languages_and_themes_generation():
+    languages = ["pt", "en", "es", "fr", "la"]
+    themes = ["business", "ecology", "law", "medicine", "mining", "politics", "technology"]
+    for lang in languages:
+        for theme in themes:
+            words = generate_content(lang=lang, output_type="words", count=10, theme=theme)
+            assert len(words) == 1
+            assert len(words[0].split()) == 10
+
+            sentences = generate_content(lang=lang, output_type="sentences", count=3, theme=theme)
+            assert len(sentences) == 3
+            for s in sentences:
+                assert len(s) > 0
+                assert s[0].isupper()
+
+            paragraphs = generate_content(lang=lang, output_type="paragraphs", count=2, theme=theme)
+            assert len(paragraphs) == 2
+            for p in paragraphs:
+                assert len(p.split()) > 5
+
+
+
+
 

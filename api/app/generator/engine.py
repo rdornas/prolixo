@@ -440,7 +440,9 @@ def generate_content(
                 "v_trans_p": t_data.get("v_trans_p", base_module.v_trans_p),
                 "v_intrans_s": t_data.get("v_intrans_s", base_module.v_intrans_s),
                 "v_intrans_p": t_data.get("v_intrans_p", base_module.v_intrans_p),
-                "prep": base_module.prep, "conj": base_module.conj, "intro": base_module.intro, "circ": base_module.circ
+                "prep": base_module.prep, "conj": base_module.conj,
+                "intro": t_data.get("intro", base_module.intro),
+                "circ": t_data.get("circ", base_module.circ)
             }
             engine = CFGEngine(romance_grammar, lexicon)
 
@@ -454,7 +456,9 @@ def generate_content(
                 "v_trans_p": t_data.get("v_trans_p", en.v_trans_p),
                 "v_intrans_s": t_data.get("v_intrans_s", en.v_intrans_s),
                 "v_intrans_p": t_data.get("v_intrans_p", en.v_intrans_p),
-                "prep": en.prep, "conj": en.conj, "intro": en.intro, "circ": en.circ
+                "prep": en.prep, "conj": en.conj,
+                "intro": t_data.get("intro", en.intro),
+                "circ": t_data.get("circ", en.circ)
             }
             engine = CFGEngine(english_grammar, lexicon)
 

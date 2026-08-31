@@ -45,4 +45,10 @@
 - Integrated `make test` automated test target with sub-second feedback (~0.2s).
 - Pre-push documentation sync and verification workflow.
 
+## 7. Cloud Deployment & Production Hosting (Vercel)
+### 7.1 Multi-Service Vercel Deployment Specification (`vercel.json`)
+- Multi-service deployment routing Next.js (`frontend/`) and FastAPI (`api/app/main.py`).
+- Relative API base proxy configuration in Next.js development and production rewrites.
+
+
 

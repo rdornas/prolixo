@@ -117,5 +117,15 @@ To execute the automated backend test suite (covering the CFG generator, Markov 
 make test
 ```
 
+---
+
+## ☁️ Cloud Deployment (Vercel)
+
+The project is configured for deployment to **Vercel** as a full-stack monorepo via [`vercel.json`](vercel.json):
+
+* Automatically routes `/api/*` traffic to the **FastAPI** backend service (`api/`).
+* Serves the **Next.js** application from the `frontend/` directory with static asset and SSR optimization.
+
+
 
 

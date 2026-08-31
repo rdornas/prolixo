@@ -1,8 +1,9 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Depends, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import RedirectResponse
+from fastapi.responses import RedirectResponse, JSONResponse
 from app.models import GenerateRequest, GenerateResponse
 from app.generator.engine import generate_content
+from app.limiter import limiter
 
 app = FastAPI(
     title="Prolixo API",
@@ -54,7 +55,26 @@ async def get_themes():
         ]
     }
 
-@app.post("/api/generate", response_model=GenerateResponse)
+@app.exception_handler(HTTPException)
+async def http_exception_handler(request: Request, exc: HTTPException):
+    if exc.status_code == 429 and isinstance(exc.detail, dict):
+        return JSONResponse(
+            status_code=429,
+            content=exc.detail,
+            headers=exc.headers or {},
+        )
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"detail": exc.detail},
+        headers=exc.headers or {},
+    )
+
+
+@app.post(
+    "/api/generate",
+    response_model=GenerateResponse,
+    dependencies=[Depends(limiter.check_rate_limit)],
+)
 async def generate_text(request: GenerateRequest):
     try:
         results = generate_content(

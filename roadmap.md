@@ -60,5 +60,15 @@
 - Multi-service deployment routing Next.js (`frontend/`) and FastAPI (`api/app/main.py`).
 - Relative API base proxy configuration in Next.js development and production rewrites.
 
+## 8. Request Rate Limiting & Origin-Aware Abuse Prevention
+### 8.1 In-Memory Zero-Dependency Sliding Window Limiter (`limiter.py`)
+- Independent sliding window rate tracking with zero third-party dependencies.
+- Origin differentiation: trusted frontend traffic vs. direct external API/script traffic.
+- Transparent proxy IP extraction supporting `X-Forwarded-For` and `X-Forwarded-User-IP`.
+- Standard HTTP 429 status code, structured JSON response body, and `Retry-After` header.
+### 8.2 Frontend Abuse Notice & Rate Limit Alert
+- Frontend rate limit feedback banner with dynamic `Retry-After` wait notice and user-friendly error recovery.
+
+
 
 

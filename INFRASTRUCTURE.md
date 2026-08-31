@@ -39,6 +39,10 @@ The infrastructure stack is designed for lightweight, containerized execution us
   * `PYTHONDONTWRITEBYTECODE=1`: Disables `.pyc` creation.
   * `PYTHONUNBUFFERED=1`: Ensures unbuffered standard stdout/stderr streams.
   * `PORT=8000`: Application listening port.
+  * `INTERNAL_API_SECRET`: Shared secret used to authenticate trusted frontend requests.
+  * `RATE_LIMIT_FRONTEND`: Sliding window request limit for frontend web clients (default: 30).
+  * `RATE_LIMIT_DIRECT`: Sliding window request limit for direct API / script clients (default: 10).
+  * `RATE_LIMIT_WINDOW`: Rate limiting sliding window duration in seconds (default: 60).
 * **Process Manager**: `uvicorn app.main:app --host 0.0.0.0 --port 8000`
 * **Restart Policy**: `unless-stopped`
 

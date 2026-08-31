@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import * as Tabs from "@radix-ui/react-tabs";
 import * as Select from "@radix-ui/react-select";
 import * as Slider from "@radix-ui/react-slider";
-import { ChevronDown, ChevronUp, Copy, Check, Sparkles, RefreshCw, Languages, FileText, AlignLeft, Type, Sun, Moon, Info, X, ThumbsUp, ThumbsDown, SpellCheck, Clock, Code2 } from "lucide-react";
+import { ChevronDown, ChevronUp, Copy, Check, Sparkles, RefreshCw, Languages, FileText, AlignLeft, Type, Sun, Moon, Info, X, ThumbsUp, ThumbsDown, SpellCheck, Clock, Code2, AlertCircle, AlertTriangle } from "lucide-react";
 
 interface Language {
   code: string;
@@ -47,10 +47,26 @@ export default function Home() {
   const [loading, setLoading] = useState<boolean>(false);
   const [copied, setCopied] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [rateLimitSeconds, setRateLimitSeconds] = useState<number | null>(null);
   const [darkMode, setDarkMode] = useState<boolean>(false);
   const [showAbout, setShowAbout] = useState<boolean>(false);
 
   const isLatin = lang === "la";
+
+  // Real-time countdown timer for rate limit recovery
+  useEffect(() => {
+    if (rateLimitSeconds === null || rateLimitSeconds <= 0) return;
+    const timer = setInterval(() => {
+      setRateLimitSeconds((prev) => {
+        if (prev === null || prev <= 1) {
+          clearInterval(timer);
+          return null;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [rateLimitSeconds]);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
@@ -85,11 +101,14 @@ export default function Home() {
     setError(null);
     try {
       const apiBase = process.env.NEXT_PUBLIC_API_URL || "";
+      const internalSecret = process.env.NEXT_PUBLIC_INTERNAL_SECRET || "prolixo_internal_client_secret";
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+        "X-Internal-Secret": internalSecret
+      };
       const response = await fetch(`${apiBase}/api/generate`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers,
         body: JSON.stringify({
           lang,
           type,
@@ -101,16 +120,23 @@ export default function Home() {
       });
 
       if (!response.ok) {
+        if (response.status === 429) {
+          const errorData = await response.json().catch(() => null);
+          const rawRetry = response.headers.get("retry-after") || errorData?.retry_after;
+          const retryAfter = rawRetry ? parseInt(String(rawRetry), 10) : 60;
+          setRateLimitSeconds(retryAfter);
+          return;
+        }
         const errorData = await response.json().catch(() => null);
         const detail = errorData?.detail || `API error (${response.status})`;
-        throw new Error(detail);
+        throw new Error(typeof detail === "string" ? detail : JSON.stringify(detail));
       }
 
       const data = await response.json();
       setResults(data.results);
       setGeneratedAt(new Date());
     } catch (err: any) {
-      console.error("API error:", err);
+      console.error("API request error:", err);
       setError(err?.message || "Failed to connect to API. Please ensure backend is running.");
     } finally {
       setLoading(false);
@@ -523,15 +549,19 @@ export default function Home() {
             {/* Generate Button */}
             <button
               onClick={handleGenerate}
-              disabled={loading}
+              disabled={loading || (rateLimitSeconds !== null && rateLimitSeconds > 0)}
               className="w-full flex items-center justify-center gap-2 py-3 px-4 bg-brand hover:bg-brand-hover active:bg-brand-active text-white rounded-xl font-semibold text-sm shadow-md hover:shadow-lg shadow-brand/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all mt-auto"
             >
               {loading ? (
                 <RefreshCw className="w-4 h-4 animate-spin" />
+              ) : rateLimitSeconds !== null && rateLimitSeconds > 0 ? (
+                <Clock className="w-4 h-4 animate-pulse" />
               ) : (
                 <RefreshCw className="w-4 h-4" />
               )}
-              Generate Placeholder
+              {rateLimitSeconds !== null && rateLimitSeconds > 0
+                ? `Wait ${rateLimitSeconds}s`
+                : "Generate Placeholder"}
             </button>
           </div>
         </section>
@@ -580,19 +610,33 @@ export default function Home() {
 
             {/* Results Body */}
             <div className="flex-1 min-h-0 overflow-y-auto pr-2 text-zinc-800 dark:text-zinc-200 text-sm leading-relaxed space-y-4 select-text">
+              {rateLimitSeconds !== null && rateLimitSeconds > 0 && (
+                <div className="flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/50 text-amber-800 dark:text-amber-300 text-xs font-medium animate-fadeIn">
+                  <AlertTriangle className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
+                  <span>Rate limit reached. You can generate again in {rateLimitSeconds}s.</span>
+                </div>
+              )}
+
+              {error && (
+                <div className="flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/50 text-rose-800 dark:text-rose-300 text-xs font-medium animate-fadeIn">
+                  <AlertCircle className="w-4 h-4 text-rose-600 dark:text-rose-400 shrink-0" />
+                  <span>{error}</span>
+                </div>
+              )}
+
               {results.length > 0 ? (
                 results.map((item, index) => (
                   <p key={index} className="transition-all duration-300 animate-fadeIn">
                     {item}
                   </p>
                 ))
-              ) : (
+              ) : !error && (!rateLimitSeconds || rateLimitSeconds <= 0) ? (
                 <div className="flex flex-col items-center justify-center text-center my-auto py-12 text-zinc-400 dark:text-zinc-600 gap-2 h-full">
                   <FileText className="w-12 h-12 stroke-[1.2]" />
                   <p className="text-sm font-medium">No text generated yet.</p>
                   <p className="text-xs">Adjust the settings and click Generate above.</p>
                 </div>
-              )}
+              ) : null}
             </div>
           </div>
         </section>

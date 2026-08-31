@@ -1,4 +1,4 @@
-.PHONY: help run-local run-dev run-docker build-run stop build logs clean prune check-colima setup-dev
+.PHONY: help run-local run-dev run-docker build-run stop build logs clean prune check-colima setup-dev test
 
 COLOR_RESET  = \033[0m
 COLOR_CYAN   = \033[36m
@@ -20,6 +20,11 @@ setup-dev: ## Create Python virtual environment and install requirements
 	@if [ ! -d "api/.venv" ]; then python3 -m venv api/.venv; fi
 	@api/.venv/bin/pip install -r api/requirements.txt
 	@echo "$(COLOR_GREEN)✅ venv ready at api/.venv.$(COLOR_RESET)"
+
+test: ## Run automated backend test suite (pytest)
+	@echo "$(COLOR_CYAN)🧪 Running automated backend test suite (pytest)...$(COLOR_RESET)"
+	@if [ ! -d "api/.venv" ]; then $(MAKE) setup-dev; fi
+	@cd api && .venv/bin/pytest -v
 
 run-local: ## Fast native local dev server (API via venv + Frontend via next dev, ~1s start)
 	@if [ ! -d "api/.venv" ]; then \

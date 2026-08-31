@@ -90,6 +90,7 @@ The project uses a [`Makefile`](Makefile) as the single control plane for local 
 | `make run-docker` | Checks Colima status (if present), starts Docker containers using existing built images (`docker compose up -d`), and streams logs. |
 | `make build-run` | Force rebuilds Docker images (`docker compose up -d --build`), launches containers, and streams logs. |
 | `make setup-dev` | Creates Python virtual environment at `api/.venv` and installs dependencies (`api/requirements.txt`). |
+| `make test` | Runs the automated backend test suite with `pytest` in sub-second time. |
 | `make stop` | Stops container stack (`docker compose down`), prunes dangling images, and stops Colima if active. |
 | `make build` | Builds Docker images for API and Frontend without starting services. |
 | `make logs` | Streams live container logs. |

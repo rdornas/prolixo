@@ -10,6 +10,15 @@ def test_root_endpoint():
     assert data.get("status") == "online"
     assert data.get("name") == "Prolixo API"
 
+def test_docs_endpoint():
+    response = client.get("/api/docs")
+    assert response.status_code == 200
+    assert "swagger" in response.text.lower() or "html" in response.headers.get("content-type", "")
+
+def test_docs_redirect():
+    response = client.get("/docs", follow_redirects=False)
+    assert response.status_code in (200, 307, 308)
+
 def test_languages_endpoint():
     response = client.get("/api/languages")
     assert response.status_code == 200

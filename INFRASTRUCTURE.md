@@ -103,8 +103,7 @@ The project uses a [`Makefile`](Makefile) as the single control plane for local 
 ## 5. Endpoints Reference (Local Runtime)
 
 * **Frontend Web Application**: [http://localhost:3000](http://localhost:3000)
-* **Swagger API Documentation**: [http://localhost:8000/docs](http://localhost:8000/docs)
-* **ReDoc API Documentation**: [http://localhost:8000/redoc](http://localhost:8000/redoc)
+* **Swagger API Documentation**: [http://localhost:8000/api/docs](http://localhost:8000/api/docs)
 
 ---
 

@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import * as Tabs from "@radix-ui/react-tabs";
 import * as Select from "@radix-ui/react-select";
 import * as Slider from "@radix-ui/react-slider";
-import { ChevronDown, ChevronUp, Copy, Check, Sparkles, RefreshCw, Languages, FileText, AlignLeft, Type, Sun, Moon, Info, X, Github, ThumbsUp, ThumbsDown, SpellCheck, Clock } from "lucide-react";
+import { ChevronDown, ChevronUp, Copy, Check, Sparkles, RefreshCw, Languages, FileText, AlignLeft, Type, Sun, Moon, Info, X, Github, ThumbsUp, ThumbsDown, SpellCheck, Clock, Code2 } from "lucide-react";
 
 interface Language {
   code: string;
@@ -166,24 +166,37 @@ export default function Home() {
               <p className="text-[10px] text-zinc-500 dark:text-zinc-400">natural multilanguage placeholder generator</p>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <Sun className={`w-4 h-4 transition-colors ${!darkMode ? "text-amber-500" : "text-zinc-400 dark:text-zinc-600"}`} />
-            <button
-              type="button"
-              role="switch"
-              aria-checked={darkMode}
-              data-state={darkMode ? "checked" : "unchecked"}
-              onClick={toggleTheme}
-              className="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-brand bg-zinc-200 dark:bg-zinc-700 radix-state-checked:bg-brand dark:radix-state-checked:bg-brand"
-              title={darkMode ? "Switch to light mode" : "Switch to dark mode"}
-              aria-label="Toggle dark mode"
+          <div className="flex items-center gap-3">
+            <a
+              href="https://github.com/rdornas/prolixo"
+              target="_blank"
+              rel="noreferrer"
+              className="p-1.5 rounded-lg text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand"
+              title="View source code on GitHub"
+              aria-label="View source code on GitHub"
             >
-              <span
+              <Github className="w-5 h-5" />
+            </a>
+            <div className="h-4 w-px bg-zinc-200 dark:bg-zinc-800" />
+            <div className="flex items-center gap-2">
+              <Sun className={`w-4 h-4 transition-colors ${!darkMode ? "text-amber-500" : "text-zinc-400 dark:text-zinc-600"}`} />
+              <button
+                type="button"
+                role="switch"
+                aria-checked={darkMode}
                 data-state={darkMode ? "checked" : "unchecked"}
-                className="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white dark:bg-zinc-100 shadow-md ring-0 transition duration-200 ease-in-out radix-state-checked:translate-x-5 radix-state-unchecked:translate-x-0"
-              />
-            </button>
-            <Moon className={`w-4 h-4 transition-colors ${darkMode ? "text-indigo-400" : "text-zinc-400 dark:text-zinc-600"}`} />
+                onClick={toggleTheme}
+                className="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-brand bg-zinc-200 dark:bg-zinc-700 radix-state-checked:bg-brand dark:radix-state-checked:bg-brand"
+                title={darkMode ? "Switch to light mode" : "Switch to dark mode"}
+                aria-label="Toggle dark mode"
+              >
+                <span
+                  data-state={darkMode ? "checked" : "unchecked"}
+                  className="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white dark:bg-zinc-100 shadow-md ring-0 transition duration-200 ease-in-out radix-state-checked:translate-x-5 radix-state-unchecked:translate-x-0"
+                />
+              </button>
+              <Moon className={`w-4 h-4 transition-colors ${darkMode ? "text-indigo-400" : "text-zinc-400 dark:text-zinc-600"}`} />
+            </div>
           </div>
         </div>
       </header>
@@ -597,14 +610,14 @@ export default function Home() {
             </button>
             <span className="text-zinc-300 dark:text-zinc-700">•</span>
             <a
-              href="https://github.com/rdornas/prolixo"
+              href={`${process.env.NEXT_PUBLIC_API_URL || ""}/api/docs`}
               target="_blank"
               rel="noreferrer"
               className="flex items-center gap-1.5 text-brand dark:text-brand-light font-semibold hover:underline cursor-pointer transition-colors"
-              title="View source code on GitHub"
+              title="Interactive API Documentation (Swagger)"
             >
-              <Github className="w-4 h-4" />
-              <span>GitHub</span>
+              <Code2 className="w-3.5 h-3.5" />
+              <span>API</span>
             </a>
           </div>
         </div>

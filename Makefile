@@ -31,16 +31,29 @@ run-local: ## Fast native local dev server (API via venv + Frontend via next dev
 		echo "$(COLOR_YELLOW)⚡ Initializing Python venv for native mode...$(COLOR_RESET)"; \
 		$(MAKE) setup-dev; \
 	fi
-	@echo "$(COLOR_BOLD)🚀 Starting Prolixo natively in DEV mode (API + Frontend)...$(COLOR_RESET)"
-	@echo "$(COLOR_GREEN)=================================================================$(COLOR_RESET)"
-	@echo "  📌 $(COLOR_BOLD)Frontend Web:$(COLOR_RESET)       $(COLOR_CYAN)http://localhost:3000$(COLOR_RESET)"
-	@echo "  📌 $(COLOR_BOLD)Swagger API Docs:$(COLOR_RESET)   $(COLOR_CYAN)http://localhost:8000/api/docs$(COLOR_RESET)"
-	@echo "$(COLOR_GREEN)=================================================================$(COLOR_RESET)"
-	@echo "$(COLOR_YELLOW)📡 Streaming live dev logs (Press Ctrl+C to stop both services)...$(COLOR_RESET)"
-	@echo ""
-	@trap 'kill 0' INT TERM EXIT; \
-		(cd api && .venv/bin/python run.py) & \
-		(cd frontend && npm run dev) & \
+	@PORTS=$$(python3 -c 'import socket; \
+def get_free(start): \
+    for p in range(start, start + 100): \
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s: \
+            try: \
+                s.bind(("127.0.0.1", p)); \
+                return p; \
+            except OSError: \
+                continue; \
+    return start; \
+print(f"{get_free(8000)} {get_free(3000)}")'); \
+	API_PORT=$$(echo $$PORTS | awk '{print $$1}'); \
+	WEB_PORT=$$(echo $$PORTS | awk '{print $$2}'); \
+	echo "$(COLOR_BOLD)🚀 Starting Prolixo natively in DEV mode (API + Frontend)...$(COLOR_RESET)"; \
+	echo "$(COLOR_GREEN)=================================================================$(COLOR_RESET)"; \
+	echo "  📌 $(COLOR_BOLD)Frontend Web:$(COLOR_RESET)       $(COLOR_CYAN)http://localhost:$$WEB_PORT$(COLOR_RESET)"; \
+	echo "  📌 $(COLOR_BOLD)Swagger API Docs:$(COLOR_RESET)   $(COLOR_CYAN)http://localhost:$$API_PORT/api/docs$(COLOR_RESET)"; \
+	echo "$(COLOR_GREEN)=================================================================$(COLOR_RESET)"; \
+	echo "$(COLOR_YELLOW)📡 Streaming live dev logs (Press Ctrl+C to stop both services)...$(COLOR_RESET)"; \
+	echo ""; \
+	trap 'kill 0' INT TERM EXIT; \
+		(cd api && API_PORT=$$API_PORT .venv/bin/python run.py) & \
+		(cd frontend && API_PORT=$$API_PORT PORT=$$WEB_PORT npm run dev -- -p $$WEB_PORT) & \
 		wait
 
 run-dev: run-local ## Alias for run-local

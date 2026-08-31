@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.models import GenerateRequest, GenerateResponse
 from app.generator.engine import generate_content
 
-app = FastAPI(title="Prolixo API", version="1.0.0")
+app = FastAPI(title="Prolixo API", version="1.0.0", redoc_url=None)
 
 app.add_middleware(
     CORSMiddleware,

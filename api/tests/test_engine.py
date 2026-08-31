@@ -97,3 +97,69 @@ def test_generate_content_invalid_type_or_lang():
         generate_content(lang="invalid_lang", output_type="words", count=5)
     with pytest.raises(ValueError):
         generate_content(lang="en", output_type="invalid_type", count=5)
+
+def test_portuguese_demonstrative_preposition_contractions():
+    grammar = {
+        "S": [["TEST_DE_ESTES."], ["TEST_EM_ESTE."], ["TEST_DE_AQUELE."]],
+        "TEST_DE_ESTES": [["prep_de", "art_estes", "noun"]],
+        "TEST_EM_ESTE": [["prep_em", "art_este", "noun"]],
+        "TEST_DE_AQUELE": [["prep_de", "art_aquele", "noun"]],
+    }
+    lexicon = {
+        "prep_de": ["de"],
+        "prep_em": ["em"],
+        "art_estes": ["estes"],
+        "art_este": ["este"],
+        "art_aquele": ["aquele"],
+        "noun": ["projetos"],
+    }
+    engine = CFGEngine(grammar, lexicon)
+    
+    # Test individual rules via generate_sentence
+    s1 = engine.generate_sentence(lang="pt", grammar_correct=True)
+    assert "de estes" not in s1.lower()
+    assert "em este" not in s1.lower()
+    assert "de aquele" not in s1.lower()
+    assert any(c in s1.lower() for c in ["destes projetos", "neste projetos", "daquele projetos"])
+
+def test_portuguese_mining_no_uncontracted_prepositions():
+    import re
+    # Run multiple Portuguese sentences across themes to guarantee no uncontracted prepositions
+    for _ in range(50):
+        sentences = generate_content(lang="pt", output_type="sentences", count=5, theme="mining", grammar_correct=True)
+        for s in sentences:
+            s_lower = s.lower()
+            assert not re.search(r'\bde este\b', s_lower)
+            assert not re.search(r'\bde estes\b', s_lower)
+            assert not re.search(r'\bde esta\b', s_lower)
+            assert not re.search(r'\bde estas\b', s_lower)
+            assert not re.search(r'\bem este\b', s_lower)
+            assert not re.search(r'\bem estes\b', s_lower)
+            assert not re.search(r'\bem esta\b', s_lower)
+            assert not re.search(r'\bem estas\b', s_lower)
+            assert not re.search(r'\bde aquele\b', s_lower)
+            assert not re.search(r'\bde o\b', s_lower)
+            assert not re.search(r'\bde a\b', s_lower)
+            assert not re.search(r'\bde os\b', s_lower)
+            assert not re.search(r'\bde as\b', s_lower)
+
+def test_spanish_and_french_contractions():
+    import re
+    grammar_es = {"S": [["prep", "art_ms", "noun."]]}
+    lexicon_es = {"prep": ["de", "a"], "art_ms": ["el"], "noun": ["modelo"]}
+    engine_es = CFGEngine(grammar_es, lexicon_es)
+    s_es = engine_es.generate_sentence(lang="es", grammar_correct=True)
+    assert not re.search(r'\bde el\b', s_es.lower())
+    assert not re.search(r'\ba el\b', s_es.lower())
+    assert "del modelo." in s_es.lower() or "al modelo." in s_es.lower()
+
+    grammar_fr = {"S": [["prep", "art_ms", "noun."]]}
+    lexicon_fr = {"prep": ["de", "à"], "art_ms": ["le"], "noun": ["modèle"]}
+    engine_fr = CFGEngine(grammar_fr, lexicon_fr)
+    s_fr = engine_fr.generate_sentence(lang="fr", grammar_correct=True)
+    assert not re.search(r'\bde le\b', s_fr.lower())
+    assert not re.search(r'\bà le\b', s_fr.lower())
+    assert "du modèle." in s_fr.lower() or "au modèle." in s_fr.lower()
+
+
+

@@ -165,8 +165,13 @@ def inject_spelling_noise(sentence: str, lang: str) -> str:
 def inject_grammar_noise(sentence: str, lang: str) -> str:
     """
     Injects grammatical discrepancies: consecutive duplicated tokens ("a a", "que que"),
-    number disagreement ("os modelo"), or verb agreement errors.
+    number disagreement ("os modelo"), verb agreement errors, or stylistic redundancies ("Para além disso").
     """
+    if lang == "pt" and re.search(r'\balém disso\b', sentence, flags=re.IGNORECASE):
+        if re.search(r'\bAlém disso\b', sentence):
+            return re.sub(r'\bAlém disso\b', 'Para além disso', sentence, count=1)
+        return re.sub(r'\balém disso\b', 'para além disso', sentence, count=1, flags=re.IGNORECASE)
+
     words = sentence.split()
     if len(words) < 4:
         return sentence

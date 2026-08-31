@@ -38,3 +38,9 @@ def test_inject_grammar_noise_languages():
         noisy = inject_grammar_noise(sentence, lang)
         assert isinstance(noisy, str)
         assert len(noisy.split()) >= len(sentence.split()) - 1
+
+def test_inject_grammar_noise_alem_disso_pt():
+    sentence = "Além disso, o planejamento estratégico impulsiona novos resultados."
+    noisy = inject_grammar_noise(sentence, "pt")
+    assert "Para além disso" in noisy
+

@@ -142,6 +142,8 @@ def test_portuguese_mining_no_uncontracted_prepositions():
             assert not re.search(r'\bde a\b', s_lower)
             assert not re.search(r'\bde os\b', s_lower)
             assert not re.search(r'\bde as\b', s_lower)
+            assert "para além disso" not in s_lower
+
 
 def test_spanish_and_french_contractions():
     import re

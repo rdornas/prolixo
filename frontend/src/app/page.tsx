@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import * as Tabs from "@radix-ui/react-tabs";
 import * as Select from "@radix-ui/react-select";
 import * as Slider from "@radix-ui/react-slider";
-import { ChevronDown, ChevronUp, Copy, Check, Sparkles, RefreshCw, Languages, FileText, AlignLeft, Type, Sun, Moon, Info, X, ThumbsUp, ThumbsDown, SpellCheck, Clock, Code2, AlertCircle } from "lucide-react";
+import { ChevronDown, ChevronUp, Copy, Check, Sparkles, RefreshCw, Languages, FileText, AlignLeft, Type, Sun, Moon, Info, X, ThumbsUp, ThumbsDown, SpellCheck, Clock, Code2, AlertCircle, AlertTriangle } from "lucide-react";
 
 interface Language {
   code: string;
@@ -612,7 +612,7 @@ export default function Home() {
             <div className="flex-1 min-h-0 overflow-y-auto pr-2 text-zinc-800 dark:text-zinc-200 text-sm leading-relaxed space-y-4 select-text">
               {rateLimitSeconds !== null && rateLimitSeconds > 0 && (
                 <div className="flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/50 text-amber-800 dark:text-amber-300 text-xs font-medium animate-fadeIn">
-                  <Clock className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
+                  <AlertTriangle className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
                   <span>Rate limit reached. You can generate again in {rateLimitSeconds}s.</span>
                 </div>
               )}

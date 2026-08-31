@@ -71,7 +71,7 @@ make run-local
 
 Access the running services:
 - **Frontend Web UI**: `http://localhost:3000`
-- **Swagger Interactive API Docs**: `http://localhost:8000/docs`
+- **Swagger Interactive API Docs**: `http://localhost:8000/api/docs`
 
 To stop both services, press `Ctrl+C`.
 

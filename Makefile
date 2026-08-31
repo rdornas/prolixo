@@ -31,17 +31,19 @@ run-local: ## Fast native local dev server (API via venv + Frontend via next dev
 		echo "$(COLOR_YELLOW)⚡ Initializing Python venv for native mode...$(COLOR_RESET)"; \
 		$(MAKE) setup-dev; \
 	fi
-	@echo "$(COLOR_BOLD)🚀 Starting Prolixo natively in DEV mode (API + Frontend)...$(COLOR_RESET)"
-	@echo "$(COLOR_GREEN)=================================================================$(COLOR_RESET)"
-	@echo "  📌 $(COLOR_BOLD)Frontend Web:$(COLOR_RESET)       $(COLOR_CYAN)http://localhost:3000$(COLOR_RESET)"
-	@echo "  📌 $(COLOR_BOLD)Swagger API Docs:$(COLOR_RESET)   $(COLOR_CYAN)http://localhost:8000/docs$(COLOR_RESET)"
-	@echo "  📌 $(COLOR_BOLD)ReDoc API Docs:$(COLOR_RESET)     $(COLOR_CYAN)http://localhost:8000/redoc$(COLOR_RESET)"
-	@echo "$(COLOR_GREEN)=================================================================$(COLOR_RESET)"
-	@echo "$(COLOR_YELLOW)📡 Streaming live dev logs (Press Ctrl+C to stop both services)...$(COLOR_RESET)"
-	@echo ""
-	@trap 'kill 0' INT TERM EXIT; \
-		(cd api && .venv/bin/python run.py) & \
-		(cd frontend && npm run dev) & \
+	@PORTS=$$(python3 scripts/find_ports.py 8000 3000); \
+	API_PORT=$$(echo $$PORTS | awk '{print $$1}'); \
+	WEB_PORT=$$(echo $$PORTS | awk '{print $$2}'); \
+	echo "$(COLOR_BOLD)🚀 Starting Prolixo natively in DEV mode (API + Frontend)...$(COLOR_RESET)"; \
+	echo "$(COLOR_GREEN)=================================================================$(COLOR_RESET)"; \
+	echo "  📌 $(COLOR_BOLD)Frontend Web:$(COLOR_RESET)       $(COLOR_CYAN)http://localhost:$$WEB_PORT$(COLOR_RESET)"; \
+	echo "  📌 $(COLOR_BOLD)Swagger API Docs:$(COLOR_RESET)   $(COLOR_CYAN)http://localhost:$$API_PORT/api/docs$(COLOR_RESET)"; \
+	echo "$(COLOR_GREEN)=================================================================$(COLOR_RESET)"; \
+	echo "$(COLOR_YELLOW)📡 Streaming live dev logs (Press Ctrl+C to stop both services)...$(COLOR_RESET)"; \
+	echo ""; \
+	trap 'kill 0' INT TERM EXIT; \
+		(cd api && API_PORT=$$API_PORT .venv/bin/python run.py) & \
+		(cd frontend && API_PORT=$$API_PORT PORT=$$WEB_PORT npm run dev -- -p $$WEB_PORT) & \
 		wait
 
 run-dev: run-local ## Alias for run-local
@@ -62,8 +64,7 @@ run-docker: check-colima ## Start Docker containers via Colima / Docker Compose
 	@echo "$(COLOR_BOLD)🎉 Prolixo containers running successfully!$(COLOR_RESET)"
 	@echo "$(COLOR_GREEN)=================================================================$(COLOR_RESET)"
 	@echo "  📌 $(COLOR_BOLD)Frontend Web:$(COLOR_RESET)       $(COLOR_CYAN)http://localhost:3000$(COLOR_RESET)"
-	@echo "  📌 $(COLOR_BOLD)Swagger API Docs:$(COLOR_RESET)   $(COLOR_CYAN)http://localhost:8000/docs$(COLOR_RESET)"
-	@echo "  📌 $(COLOR_BOLD)ReDoc API Docs:$(COLOR_RESET)     $(COLOR_CYAN)http://localhost:8000/redoc$(COLOR_RESET)"
+	@echo "  📌 $(COLOR_BOLD)Swagger API Docs:$(COLOR_RESET)   $(COLOR_CYAN)http://localhost:8000/api/docs$(COLOR_RESET)"
 	@echo "$(COLOR_GREEN)=================================================================$(COLOR_RESET)"
 	@echo "$(COLOR_YELLOW)📡 Streaming logs in real time (Press Ctrl+C to stop and shut down)...$(COLOR_RESET)"
 	@echo ""
@@ -77,8 +78,7 @@ build-run: check-colima ## Force rebuild Docker images and start containers
 	@echo "$(COLOR_BOLD)🎉 Prolixo containers rebuilt & running successfully!$(COLOR_RESET)"
 	@echo "$(COLOR_GREEN)=================================================================$(COLOR_RESET)"
 	@echo "  📌 $(COLOR_BOLD)Frontend Web:$(COLOR_RESET)       $(COLOR_CYAN)http://localhost:3000$(COLOR_RESET)"
-	@echo "  📌 $(COLOR_BOLD)Swagger API Docs:$(COLOR_RESET)   $(COLOR_CYAN)http://localhost:8000/docs$(COLOR_RESET)"
-	@echo "  📌 $(COLOR_BOLD)ReDoc API Docs:$(COLOR_RESET)     $(COLOR_CYAN)http://localhost:8000/redoc$(COLOR_RESET)"
+	@echo "  📌 $(COLOR_BOLD)Swagger API Docs:$(COLOR_RESET)   $(COLOR_CYAN)http://localhost:8000/api/docs$(COLOR_RESET)"
 	@echo "$(COLOR_GREEN)=================================================================$(COLOR_RESET)"
 	@echo "$(COLOR_YELLOW)📡 Streaming logs in real time (Press Ctrl+C to stop and shut down)...$(COLOR_RESET)"
 	@echo ""

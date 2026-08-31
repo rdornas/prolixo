@@ -18,6 +18,10 @@
 ### 2.6 Metadata Diagnostics & Character Count
 - Real-time generation timestamp display (`Generated at: ...`) and complete character count tracking (including spaces and punctuation).
 - Manual placeholder generation trigger alignment preventing premature rendering on configuration changes.
+### 2.7 Navigation & Documentation Integration
+- Official circular GitHub repository navigation link integrated into the header alongside theme controls with brand color hover states.
+- Interactive Swagger API Documentation link (`/api/docs`) placed directly in the footer with `<Code2 />` icon.
+- Dynamic development port resolution (`scripts/find_ports.py`) preventing port collisions on `make run-local`.
 
 ## 3. Design System & Visual Identity
 ### 3.1 Official Color Palette Definition (Terracotta, Peach Sand, Mint Accent, Charcoal, Pure White)

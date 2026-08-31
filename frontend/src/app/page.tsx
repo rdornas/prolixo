@@ -157,7 +157,7 @@ export default function Home() {
             </div>
             <div>
               <h1 className="text-xl font-extrabold tracking-tight font-manrope text-zinc-900 dark:text-zinc-50">Prolixo</h1>
-              <p className="text-[10px] text-zinc-500 dark:text-zinc-400">AI-powered natural language placeholder generator</p>
+              <p className="text-[10px] text-zinc-500 dark:text-zinc-400">natural language placeholder generator</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -578,7 +578,7 @@ export default function Home() {
       {/* Footer */}
       <footer className="shrink-0 border-t border-zinc-200 dark:border-zinc-800 py-3.5 bg-zinc-50 dark:bg-zinc-950/20">
         <div className="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between text-xs text-zinc-500 dark:text-zinc-500 gap-4">
-          <p>© 2026 Prolixo. AI-powered statistical placeholder text generator for development and UI/UX design.</p>
+          <p>© 2026 Prolixo. natural language placeholder text generator for development and UI/UX design.</p>
           <div className="flex gap-4 items-center">
             <button
               onClick={() => setShowAbout(true)}
@@ -645,7 +645,7 @@ export default function Home() {
                   🎯 Project Purpose
                 </h4>
                 <p className="text-xs text-zinc-600 dark:text-zinc-400">
-                  <strong>Prolixo</strong> is a statistical AI-powered natural language generation engine built for UI/UX designers and developers. It produces structured, highly-variable, and realistic text blocks in English, French, Portuguese, Spanish, and classical Latin.
+                  <strong>Prolixo</strong> is a natural language placeholder text generator built for development and UI/UX design. It produces structured, highly-variable, and realistic text blocks in English, French, Portuguese, Spanish, and classical Latin.
                 </p>
               </div>
 

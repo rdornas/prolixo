@@ -286,7 +286,7 @@ def get_stem(word: str, lang: str) -> str:
         w_no_acc = re.sub(r'(es|os|as|is|s)$', '', w_no_acc)
         w_no_acc = re.sub(r'(o|a|e)$', '', w_no_acc)
     elif lang == 'fr':
-        w_no_acc = re.sub(r'(ant|ent|issant|er|ir|re|ait|aient|ont|eaux|aux|es|e|s)$', '', w_no_acc)
+        w_no_acc = re.sub(r'(ement|ment|issant|ant|ent|er|ir|re|ait|aient|ont|eaux|aux|es|e|s)$', '', w_no_acc)
         w_no_acc = re.sub(r'(ique|iques|isme|ismes|iste|istes|tion|tions)$', '', w_no_acc)
     elif lang == 'en':
         w_no_acc = re.sub(r'(ing|edly|ed|es|s|ly|ic|ical)$', '', w_no_acc)
@@ -308,6 +308,12 @@ def generate_content(
     Generates words, sentences, or paragraphs with stem deduplication and thematic vocabulary.
     Supports clean mode (grammar_correct=True, orthography_correct=True) or noisy mode.
     """
+    if lang not in {"pt", "en", "es", "fr", "la"}:
+        raise ValueError(f"Unsupported language: {lang}")
+
+    if output_type not in {"words", "sentences", "paragraphs"}:
+        raise ValueError(f"Invalid output type: {output_type}")
+
     # Latin is strictly classical Lorem Ipsum without themes or noise injection
     if lang == "la":
         if output_type == "words":

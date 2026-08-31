@@ -5,7 +5,7 @@ Complete the current task with the minimal sufficient solution.
 Prohibit over-engineering.
 Planning can be aggressive, but execution must be lightweight.
 Designs that cannot prove necessity are not done by default.
-Tests that cannot prove necessity are not added by default.
+Development follows **TDD (Test-Driven Development)**: every feature, fix, and behavior must be validated by automated tests without introducing unnecessary abstraction or test complexity.
 
 ## Language Conventions
 - **Internal Project Language**: All codebase files, source code, comments, docstrings, configuration files, Makefiles, Dockerfiles, compose specs, technical documentation, commit messages, and internal console/system logs MUST be written in **English**.
@@ -72,52 +72,35 @@ Tests that cannot prove necessity are not added by default.
 5. Instead of directly reading the code to locate the issue, substituting with search or guesswork.
 6. Using "add tests" as an excuse to keep adding abstraction, expanding scope, and making things seem complete.
 
-## Testing
-Tests only serve to verify the current changes.
-Tests are not responsible for filling historical coverage gaps or designing future test systems.
+## Testing & TDD Principles
+Test-Driven Development (TDD) is the default development methodology for Prolixo.
+Tests ensure correctness, prevent regressions, and guide design. However, tests should remain concise, readable, and free of over-engineering or mock bloat.
 
-1. Prioritize running existing tests related to this change.
-2. If existing tests can prove the change is correct, do not add new tests.
-3. Only add new tests in the following two cases:
-   - This change modified behavior, but existing tests don't cover it
-   - User explicitly requires adding tests
-4. New tests cover at most 1 main path of the actual change this time, and if necessary, add 1 key failure path.
-5. Prohibit expanding test scope for completeness.
-6. Prohibit using the opportunity to fill tests for unrelated modules.
-7. Prohibit introducing new test frameworks, tools, or infrastructure.
-8. Prohibit writing large snapshots, parameterized matrices, or end-to-end suites.
-9. Prohibit writing tests for boundaries not required by the current needs.
-10. Prohibit modifying tests first and then forcing product behavior to become more complex.
-11. Prohibit using green tests as a reason to continue adding abstraction.
-
-Before adding any test, must be able to answer:
-- Which accepted requirement is this test verifying
-- If removed, can existing tests no longer detect this regression
-- Is it more complex than the implementation itself
-
-If test code is longer or more convoluted than the implementation code, default to considering it over-engineering; delete the test or shrink the implementation.
+1. **Test-First & Behavior Coverage**: Write tests before or alongside implementation for each feature, endpoint, generator rule, or bugfix.
+2. **Fast Feedback**: Maintain unit and integration test suites that execute quickly (sub-second or few seconds).
+3. **No Test Over-Engineering**:
+   - Write clean, straightforward assertions.
+   - Avoid creating massive nested mock hierarchies when real objects or lightweight fixtures suffice.
+   - Do not write overly complicated test utilities that are harder to maintain than the application code itself.
+4. **Backend Testing**: Use `pytest` for unit and FastAPI integration tests covering all generator rules, algorithms, and endpoints.
+5. **Frontend Validation**: Use TypeScript compile-time type checking and linting to validate UI contracts cleanly without mock bloat or heavy DOM simulation layers.
+6. **Continuous Validation**: All tests must pass before code is committed or merged.
 
 ## Model Division of Labor
 - Requirement clarification and solution review: Use stronger models
 - Writing code, modifying code, running tests: Use medium-low spec models, or lighter execution models
-- When the execution model starts stacking architecture, adding compatibility, expanding scope, or adding large test suites: Stop immediately and rewrite the minimal plan
+- When the execution model starts stacking architecture, adding compatibility, or expanding unnecessary scope: Stop immediately and simplify
 
 ## Pre-Completion Checklist
 - Intent and acceptance criteria have been restated
-- Solution is the minimal one, not the maximal one
-- Non-goals have been marked
-- Prioritized reading relevant code, rather than piecing conclusions from search
-- Only modified the minimal set files needed to complete the task
-- Related existing tests have been run
-- No tests added for unrequired scenarios
-- If tests added, only lock this behavior, and in very small numbers
-- Tests did not introduce new dependencies or directory structures
-- Diff is small, no extra files, no leftover debug code
-- No extra construction done to make it look complete
-- Dedicated infrastructure document updated if any infrastructure changes (Docker, stacks, etc.) were made
+- Solution is well-tested following TDD principles
+- Tests are fast, clean, and directly verify the intended behavior
+- Only modified the minimal set of files needed to complete the task
+- All existing and new tests pass successfully
+- Dedicated infrastructure document updated if any infrastructure changes were made
 - No hardcoded absolute local machine paths (e.g., `/Users/...`) in any file
 
 ## General Principles
-Confirm intent first, then complete acceptance with minimal changes.
+Confirm intent first, then complete acceptance with minimal sufficient changes.
 Designs that cannot prove necessity are not done by default.
-Tests that cannot prove necessity are not added by default.
+All features and modifications are backed by automated tests (TDD).

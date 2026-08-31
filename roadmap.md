@@ -31,9 +31,10 @@
 ## 5. Linguistic Precision & Quality Noise Injection (NLP / Spellchecker Testing)
 ### 5.1 Deduplication & Contraction Collision Sanitization (Error-Free Mode)
 - Automated consecutive duplicate word collapse (e.g. eliminating accidental "a a", "mínimo mínimo", etc.).
-- Preposition-article collision resolution across Romance language dictionaries.
+- Preposition-article and preposition-demonstrative collision resolution across Romance languages (`destes`, `neste`, `daquele`, `del`, `du`, `au`, etc.).
+- Conciseness sanitization on formal introductions (e.g., replacing verbose *"Para além disso"* with concise *"Além disso"*).
 ### 5.2 Deterministic Error Injection Engine (`noise.py`)
-- **Grammatical Noise Engine**: Synthetic insertion of grammatical token duplications, subject-verb disagreement, and number/gender mismatches across PT, EN, ES, and FR inspired by LanguageTool rules.
+- **Grammatical Noise Engine**: Synthetic insertion of grammatical token duplications, subject-verb disagreement, number/gender mismatches, and stylistic/prolix redundancies (*"Para além disso"*) across PT, EN, ES, and FR inspired by LanguageTool rules.
 - **Orthographical Noise Engine**: Realistic spelling corruptions, diacritic drops, and phonetic/transposition mutations (e.g., `length`/`lenght`, `height`/`heigth`, `width`/`widht`, `ei`/`ie`, `ss`/`ç`, `concerteza`, `excessão`, `dévelopement`, etc.).
 ### 5.3 Classical Latin (*Lorem Ipsum*) Domain Isolation
 - Classical Markov Order-2 generator execution bypassing domain themes and error injection.

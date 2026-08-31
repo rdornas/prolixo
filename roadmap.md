@@ -1,4 +1,4 @@
-# Prolixo — Roadmap
+# Prolixo - Roadmap
 
 ## 1. Backend Architecture & Language Generation Engine
 ### 1.1 Statistical & Context-Free Grammar (CFG) Combinatorial Engine
@@ -34,7 +34,7 @@
 - **Orthographical Noise Engine**: Realistic spelling corruptions, diacritic drops, and phonetic/transposition mutations (e.g., `length`/`lenght`, `height`/`heigth`, `width`/`widht`, `ei`/`ie`, `ss`/`ç`, `concerteza`, `excessão`, `dévelopement`, etc.).
 ### 5.3 Classical Latin (*Lorem Ipsum*) Domain Isolation
 - Classical Markov Order-2 generator execution bypassing domain themes and error injection.
-- UI state guards: automatic disabling of Theme dropdown (showing `—`) and Linguistic Precision switches with `cursor-not-allowed` indicator.
+- UI state guards: automatic disabling of Theme dropdown (showing `-`) and Linguistic Precision switches with `cursor-not-allowed` indicator.
 ### 5.4 Sidebar Linguistic Precision Controls & Interactive Tooltips
 - Stacked independent switches for **Grammar** and **Orthography** with Thumbs Up / Down indicators.
 - Explanatory information tooltip on the **Linguistic Precision** header detailing NLP/spellchecker testing use cases.

@@ -314,7 +314,7 @@ export default function Home() {
                         avoidCollisions={false}
                         className="overflow-hidden bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-xl z-50 w-[var(--radix-select-trigger-width)]"
                       >
-                        <Select.Viewport className="p-1.5 max-h-72 overflow-y-auto overscroll-contain custom-scrollbar scroll-smooth focus:outline-none">
+                        <Select.Viewport className="p-1.5 pr-1 max-h-[245px] overflow-y-auto overscroll-contain custom-scrollbar scroll-smooth focus:outline-none">
                           {THEMES.map((item) => (
                             <Select.Item
                               key={item.code}

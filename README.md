@@ -20,6 +20,7 @@ prolixo/
 ├── api/                        # FastAPI Backend API
 │   ├── app/
 │   │   ├── __init__.py
+│   │   ├── limiter.py          # Zero-dependency in-memory sliding window rate limiter
 │   │   ├── main.py             # API routes & CORS configuration
 │   │   ├── models.py           # Pydantic request/response schemas
 │   │   └── generator/          # Statistical natural language generation engine
@@ -38,6 +39,7 @@ prolixo/
 │   │   ├── __init__.py
 │   │   ├── test_api.py         # FastAPI endpoint & schema tests
 │   │   ├── test_engine.py      # CFG, Markov & stemmer tests
+│   │   ├── test_limiter.py     # Rate limiting and origin isolation tests
 │   │   ├── test_models.py      # Pydantic schema validation tests
 │   │   └── test_noise.py       # Spelling & grammar corruption tests
 │   ├── requirements.txt        # Python dependencies

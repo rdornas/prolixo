@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import * as Tabs from "@radix-ui/react-tabs";
 import * as Select from "@radix-ui/react-select";
 import * as Slider from "@radix-ui/react-slider";
-import { ChevronDown, ChevronUp, Copy, Check, Sparkles, RefreshCw, Languages, FileText, AlignLeft, Type, Sun, Moon, Info, X, ThumbsUp, ThumbsDown, SpellCheck, Clock, Code2 } from "lucide-react";
+import { ChevronDown, ChevronUp, Copy, Check, Sparkles, RefreshCw, Languages, FileText, AlignLeft, Type, Sun, Moon, Info, X, ThumbsUp, ThumbsDown, SpellCheck, Clock, Code2, AlertCircle } from "lucide-react";
 
 interface Language {
   code: string;
@@ -85,11 +85,14 @@ export default function Home() {
     setError(null);
     try {
       const apiBase = process.env.NEXT_PUBLIC_API_URL || "";
+      const internalSecret = process.env.NEXT_PUBLIC_INTERNAL_SECRET || "prolixo_internal_client_secret";
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+        "X-Internal-Secret": internalSecret
+      };
       const response = await fetch(`${apiBase}/api/generate`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers,
         body: JSON.stringify({
           lang,
           type,
@@ -101,9 +104,16 @@ export default function Home() {
       });
 
       if (!response.ok) {
+        if (response.status === 429) {
+          const errorData = await response.json().catch(() => null);
+          const retryAfter = response.headers.get("retry-after") || errorData?.retry_after || 60;
+          throw new Error(
+            `Rate limit reached. Please wait ${retryAfter}s before generating again.`
+          );
+        }
         const errorData = await response.json().catch(() => null);
         const detail = errorData?.detail || `API error (${response.status})`;
-        throw new Error(detail);
+        throw new Error(typeof detail === "string" ? detail : JSON.stringify(detail));
       }
 
       const data = await response.json();
@@ -580,19 +590,26 @@ export default function Home() {
 
             {/* Results Body */}
             <div className="flex-1 min-h-0 overflow-y-auto pr-2 text-zinc-800 dark:text-zinc-200 text-sm leading-relaxed space-y-4 select-text">
+              {error && (
+                <div className="flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/50 text-amber-800 dark:text-amber-300 text-xs font-medium animate-fadeIn">
+                  <AlertCircle className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
+                  <span>{error}</span>
+                </div>
+              )}
+
               {results.length > 0 ? (
                 results.map((item, index) => (
                   <p key={index} className="transition-all duration-300 animate-fadeIn">
                     {item}
                   </p>
                 ))
-              ) : (
+              ) : !error ? (
                 <div className="flex flex-col items-center justify-center text-center my-auto py-12 text-zinc-400 dark:text-zinc-600 gap-2 h-full">
                   <FileText className="w-12 h-12 stroke-[1.2]" />
                   <p className="text-sm font-medium">No text generated yet.</p>
                   <p className="text-xs">Adjust the settings and click Generate above.</p>
                 </div>
-              )}
+              ) : null}
             </div>
           </div>
         </section>

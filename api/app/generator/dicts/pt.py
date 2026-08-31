@@ -151,7 +151,7 @@ intro = [
     "Diante de tal panorama, ",
     "Sob o prisma analítico, ",
     "Em termos práticos, ",
-    "Para além disso, ",
+    "Além disso, ",
     "Em última análise, "
 ]
 

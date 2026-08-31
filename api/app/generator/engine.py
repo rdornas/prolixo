@@ -76,20 +76,84 @@ class CFGEngine:
             # Collapse consecutive duplicate words (e.g. "a a" -> "a", "de de" -> "de")
             text = re.sub(r'\b([A-Za-zÀ-ÿ]+)(?:\s+\1\b)+', r'\1', text, flags=re.IGNORECASE)
 
-            # Contract Portuguese preposition collisions if present
+            # Contract Romance preposition collisions if present
             if lang == "pt":
+                # Preposition 'de'
                 text = re.sub(r'\bde o\b', 'do', text, flags=re.IGNORECASE)
                 text = re.sub(r'\bde a\b', 'da', text, flags=re.IGNORECASE)
                 text = re.sub(r'\bde os\b', 'dos', text, flags=re.IGNORECASE)
                 text = re.sub(r'\bde as\b', 'das', text, flags=re.IGNORECASE)
+                text = re.sub(r'\bde este\b', 'deste', text, flags=re.IGNORECASE)
+                text = re.sub(r'\bde esta\b', 'desta', text, flags=re.IGNORECASE)
+                text = re.sub(r'\bde estes\b', 'destes', text, flags=re.IGNORECASE)
+                text = re.sub(r'\bde estas\b', 'destas', text, flags=re.IGNORECASE)
+                text = re.sub(r'\bde isto\b', 'disto', text, flags=re.IGNORECASE)
+                text = re.sub(r'\bde esse\b', 'desse', text, flags=re.IGNORECASE)
+                text = re.sub(r'\bde essa\b', 'dessa', text, flags=re.IGNORECASE)
+                text = re.sub(r'\bde esses\b', 'desses', text, flags=re.IGNORECASE)
+                text = re.sub(r'\bde essas\b', 'dessas', text, flags=re.IGNORECASE)
+                text = re.sub(r'\bde isso\b', 'disso', text, flags=re.IGNORECASE)
+                text = re.sub(r'\bde aquele\b', 'daquele', text, flags=re.IGNORECASE)
+                text = re.sub(r'\bde aquela\b', 'daquela', text, flags=re.IGNORECASE)
+                text = re.sub(r'\bde aqueles\b', 'daqueles', text, flags=re.IGNORECASE)
+                text = re.sub(r'\bde aquelas\b', 'daquelas', text, flags=re.IGNORECASE)
+                text = re.sub(r'\bde aquilo\b', 'daquilo', text, flags=re.IGNORECASE)
+                text = re.sub(r'\bde ele\b', 'dele', text, flags=re.IGNORECASE)
+                text = re.sub(r'\bde ela\b', 'dela', text, flags=re.IGNORECASE)
+                text = re.sub(r'\bde eles\b', 'deles', text, flags=re.IGNORECASE)
+                text = re.sub(r'\bde elas\b', 'delas', text, flags=re.IGNORECASE)
+
+                # Preposition 'em'
                 text = re.sub(r'\bem o\b', 'no', text, flags=re.IGNORECASE)
                 text = re.sub(r'\bem a\b', 'na', text, flags=re.IGNORECASE)
                 text = re.sub(r'\bem os\b', 'nos', text, flags=re.IGNORECASE)
                 text = re.sub(r'\bem as\b', 'nas', text, flags=re.IGNORECASE)
+                text = re.sub(r'\bem este\b', 'neste', text, flags=re.IGNORECASE)
+                text = re.sub(r'\bem esta\b', 'nesta', text, flags=re.IGNORECASE)
+                text = re.sub(r'\bem estes\b', 'nestes', text, flags=re.IGNORECASE)
+                text = re.sub(r'\bem estas\b', 'nestas', text, flags=re.IGNORECASE)
+                text = re.sub(r'\bem isto\b', 'nisto', text, flags=re.IGNORECASE)
+                text = re.sub(r'\bem esse\b', 'nesse', text, flags=re.IGNORECASE)
+                text = re.sub(r'\bem essa\b', 'nessa', text, flags=re.IGNORECASE)
+                text = re.sub(r'\bem esses\b', 'nesses', text, flags=re.IGNORECASE)
+                text = re.sub(r'\bem essas\b', 'nessas', text, flags=re.IGNORECASE)
+                text = re.sub(r'\bem isso\b', 'nisso', text, flags=re.IGNORECASE)
+                text = re.sub(r'\bem aquele\b', 'naquele', text, flags=re.IGNORECASE)
+                text = re.sub(r'\bem aquela\b', 'naquela', text, flags=re.IGNORECASE)
+                text = re.sub(r'\bem aqueles\b', 'naqueles', text, flags=re.IGNORECASE)
+                text = re.sub(r'\bem aquelas\b', 'naquelas', text, flags=re.IGNORECASE)
+                text = re.sub(r'\bem aquilo\b', 'naquilo', text, flags=re.IGNORECASE)
+                text = re.sub(r'\bem ele\b', 'nele', text, flags=re.IGNORECASE)
+                text = re.sub(r'\bem ela\b', 'nela', text, flags=re.IGNORECASE)
+                text = re.sub(r'\bem eles\b', 'neles', text, flags=re.IGNORECASE)
+                text = re.sub(r'\bem elas\b', 'nelas', text, flags=re.IGNORECASE)
+
+                # Preposition 'a'
                 text = re.sub(r'\ba a\b', 'à', text, flags=re.IGNORECASE)
                 text = re.sub(r'\ba as\b', 'às', text, flags=re.IGNORECASE)
                 text = re.sub(r'\ba o\b', 'ao', text, flags=re.IGNORECASE)
                 text = re.sub(r'\ba os\b', 'aos', text, flags=re.IGNORECASE)
+                text = re.sub(r'\ba aquele\b', 'àquele', text, flags=re.IGNORECASE)
+                text = re.sub(r'\ba aquela\b', 'àquela', text, flags=re.IGNORECASE)
+                text = re.sub(r'\ba aqueles\b', 'àqueles', text, flags=re.IGNORECASE)
+                text = re.sub(r'\ba aquelas\b', 'àquelas', text, flags=re.IGNORECASE)
+                text = re.sub(r'\ba aquilo\b', 'àquilo', text, flags=re.IGNORECASE)
+
+                # Preposition 'por'
+                text = re.sub(r'\bpor o\b', 'pelo', text, flags=re.IGNORECASE)
+                text = re.sub(r'\bpor a\b', 'pela', text, flags=re.IGNORECASE)
+                text = re.sub(r'\bpor os\b', 'pelos', text, flags=re.IGNORECASE)
+                text = re.sub(r'\bpor as\b', 'pelas', text, flags=re.IGNORECASE)
+
+            elif lang == "es":
+                text = re.sub(r'\bde el\b', 'del', text, flags=re.IGNORECASE)
+                text = re.sub(r'\ba el\b', 'al', text, flags=re.IGNORECASE)
+
+            elif lang == "fr":
+                text = re.sub(r'\bde le\b', 'du', text, flags=re.IGNORECASE)
+                text = re.sub(r'\bde les\b', 'des', text, flags=re.IGNORECASE)
+                text = re.sub(r'\bà le\b', 'au', text, flags=re.IGNORECASE)
+                text = re.sub(r'\bà les\b', 'aux', text, flags=re.IGNORECASE)
         else:
             text = inject_grammar_noise(text, lang)
 

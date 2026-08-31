@@ -13,6 +13,9 @@
 ### 2.3 Dynamic Text Viewer & Real-Time Copy-to-Clipboard
 ### 2.4 Light & Dark Mode System Theme Synchronization
 ### 2.5 About & Inspirations Modal with Historical References
+### 2.6 Metadata Diagnostics & Character Count
+- Real-time generation timestamp display (`Generated at: ...`) and complete character count tracking (including spaces and punctuation).
+- Manual placeholder generation trigger alignment preventing premature rendering on configuration changes.
 
 ## 3. Design System & Visual Identity
 ### 3.1 Official Color Palette Definition (Terracotta, Peach Sand, Mint Accent, Charcoal, Pure White)

@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import * as Tabs from "@radix-ui/react-tabs";
 import * as Select from "@radix-ui/react-select";
 import * as Slider from "@radix-ui/react-slider";
-import { ChevronDown, ChevronUp, Copy, Check, Sparkles, RefreshCw, Languages, FileText, AlignLeft, Type, Sun, Moon, Info, X, Github, ThumbsUp, ThumbsDown, SpellCheck } from "lucide-react";
+import { ChevronDown, ChevronUp, Copy, Check, Sparkles, RefreshCw, Languages, FileText, AlignLeft, Type, Sun, Moon, Info, X, Github, ThumbsUp, ThumbsDown, SpellCheck, Clock } from "lucide-react";
 
 interface Language {
   code: string;
@@ -43,6 +43,7 @@ export default function Home() {
   const [grammarCorrect, setGrammarCorrect] = useState<boolean>(true);
   const [orthographyCorrect, setOrthographyCorrect] = useState<boolean>(true);
   const [results, setResults] = useState<string[]>([]);
+  const [generatedAt, setGeneratedAt] = useState<Date | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [copied, setCopied] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -107,6 +108,7 @@ export default function Home() {
 
       const data = await response.json();
       setResults(data.results);
+      setGeneratedAt(new Date());
     } catch (err: any) {
       console.error("API error:", err);
       setError(err?.message || "Failed to connect to API. Please ensure backend is running.");
@@ -120,6 +122,8 @@ export default function Home() {
     handleGenerate();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const charCount = results.join("\n\n").length;
 
   const handleCopy = async () => {
     const textToCopy = results.join("\n\n");
@@ -522,14 +526,26 @@ export default function Home() {
           <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-5 md:p-6 shadow-sm flex flex-col h-full min-h-0">
 
             {/* Results Header */}
-            <div className="flex justify-between items-center border-b border-zinc-100 dark:border-zinc-800 pb-4 mb-4 shrink-0">
-              <h2 className="text-sm font-semibold text-zinc-500 dark:text-zinc-400 tracking-wider uppercase">
-                Generated Text ({type === "words" ? "Words" : type === "sentences" ? "Sentences" : "Paragraphs"})
-              </h2>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-zinc-100 dark:border-zinc-800 pb-4 mb-4 gap-2 shrink-0">
+              <div className="flex flex-col gap-1">
+                <h2 className="text-sm font-semibold text-zinc-500 dark:text-zinc-400 tracking-wider uppercase">
+                  Generated Text ({type === "words" ? "Words" : type === "sentences" ? "Sentences" : "Paragraphs"})
+                </h2>
+                {results.length > 0 && generatedAt && (
+                  <div className="flex items-center gap-1.5 text-xs text-zinc-400 dark:text-zinc-500">
+                    <Clock className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 shrink-0" />
+                    <span>
+                      Generated at: {generatedAt.toLocaleDateString()} {generatedAt.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" })}
+                    </span>
+                    <span>•</span>
+                    <span>{charCount.toLocaleString()} characters</span>
+                  </div>
+                )}
+              </div>
               {results.length > 0 && (
                 <button
                   onClick={handleCopy}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-brand/40 hover:bg-brand/5 hover:text-brand text-xs font-semibold text-zinc-700 dark:text-zinc-300 transition-colors focus:outline-none"
+                  className="flex items-center self-start sm:self-auto gap-1.5 px-3 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-brand/40 hover:bg-brand/5 hover:text-brand text-xs font-semibold text-zinc-700 dark:text-zinc-300 transition-colors focus:outline-none"
                   title="Copy to clipboard"
                 >
                   {copied ? (

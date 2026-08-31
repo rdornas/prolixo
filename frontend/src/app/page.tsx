@@ -115,9 +115,11 @@ export default function Home() {
     }
   }, [lang, type, domainTheme, count, grammarCorrect, orthographyCorrect, isLatin]);
 
+  // Initial generation on component mount only
   useEffect(() => {
     handleGenerate();
-  }, [handleGenerate]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleCopy = async () => {
     const textToCopy = results.join("\n\n");

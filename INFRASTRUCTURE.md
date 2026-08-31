@@ -105,3 +105,16 @@ The project uses a [`Makefile`](Makefile) as the single control plane for local 
 * **Frontend Web Application**: [http://localhost:3000](http://localhost:3000)
 * **Swagger API Documentation**: [http://localhost:8000/docs](http://localhost:8000/docs)
 * **ReDoc API Documentation**: [http://localhost:8000/redoc](http://localhost:8000/redoc)
+
+---
+
+## 6. Cloud & Serverless Deployment (Vercel)
+
+The repository includes native configuration for deploying the full monorepo stack to **Vercel** via [`vercel.json`](vercel.json):
+
+* **Multi-Service Architecture**: Configures independent services for Next.js (`frontend/`) and FastAPI (`api/`).
+* **API Entrypoint**: Directly connects Python ASGI application (`api/app/main.py` / `api/index.py`).
+* **Edge Rewrites**:
+  * `/api/(.*)` -> Routed directly to the `api` service.
+  * `/(.*)` -> Routed to the `frontend` Next.js service.
+

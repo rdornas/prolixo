@@ -83,7 +83,8 @@ export default function Home() {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch("http://localhost:8000/api/generate", {
+      const apiBase = process.env.NEXT_PUBLIC_API_URL || "";
+      const response = await fetch(`${apiBase}/api/generate`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

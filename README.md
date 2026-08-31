@@ -34,6 +34,12 @@ prolixo/
 │   │           ├── fr.py       # French CFG grammatical decks (gender/number tagged nouns, verbs, adj)
 │   │           ├── la.py       # Classical Latin corpus sentences (Cicero) for Markov Chain generation
 │   │           └── themes.py   # Domain vocabulary overrides (Business, Ecology, Law, Medicine, Mining, Politics, Tech)
+│   ├── tests/                  # Automated test suite (pytest)
+│   │   ├── __init__.py
+│   │   ├── test_api.py         # FastAPI endpoint & schema tests
+│   │   ├── test_engine.py      # CFG, Markov & stemmer tests
+│   │   ├── test_models.py      # Pydantic schema validation tests
+│   │   └── test_noise.py       # Spelling & grammar corruption tests
 │   ├── requirements.txt        # Python dependencies
 │   └── run.py                  # API development server entry point
 │
@@ -100,5 +106,16 @@ make setup-dev
   ```bash
   cd frontend && npm run dev
   ```
+
+---
+
+## 🧪 Running Automated Tests
+
+To execute the automated backend test suite (covering the CFG generator, Markov chains, stemmers, noise injectors, and FastAPI API contracts):
+
+```bash
+make test
+```
+
 
 

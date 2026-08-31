@@ -28,6 +28,8 @@ Development follows **TDD (Test-Driven Development)**: every feature, fix, and b
 - **Main Branch is Sacred**: Direct commits or pushes to the `main` branch are strictly prohibited. All changes must go through dedicated feature/fix branches.
 - **"Passo Curto" (Short Step)**: Create/switch to a branch and commit the changes locally. (No push, no PR).
 - **"Passo Longo" (Long Step)**: Create/switch to a branch, commit the changes, push the branch to the remote repository, and open a Pull Request (PR) targeting `main`.
+  - **Pre-Push Documentation Updates**: Before executing the push, review if project documentation files ([`roadmap.md`](roadmap.md), [`INFRASTRUCTURE.md`](INFRASTRUCTURE.md), [`README.md`](README.md)) need updates to reflect the changes. When applicable, update and commit these files before pushing.
+  - **PR Content**: The PR description MUST include a clear summary of what was done and the specific automated tests executed.
 
 ## Action Boundaries & Permissions
 1. **Pre-action Restatement**:
@@ -59,8 +61,11 @@ Development follows **TDD (Test-Driven Development)**: every feature, fix, and b
      - Modifying many unrelated files at once
      - Creating a second implementation to accommodate old logic
      - Using the opportunity to add a complete test suite
-6. **Infrastructure Documentation**:
-   - Any modification to infrastructure components (e.g., Docker, docker-compose, container stacks, environment/deployment setups) MUST be documented in the dedicated infrastructure document ([INFRASTRUCTURE.md](INFRASTRUCTURE.md)) immediately after the change is completed.
+6. **Project Documentation & Tracking Updates**:
+   - Any modification affecting infrastructure (Docker, compose, environment) MUST be documented in [`INFRASTRUCTURE.md`](INFRASTRUCTURE.md).
+   - Any modification affecting milestones, features, or architectural plans MUST be documented in [`roadmap.md`](roadmap.md).
+   - Any change affecting setup instructions, user guides, or project APIs MUST be documented in [`README.md`](README.md).
+   - All relevant documentation updates must be committed before pushing.
 7. **No Absolute Local Paths**:
    - **NEVER hardcode local machine absolute file paths** (e.g., `/Users/username/...`, `C:\Users\...`, `file:///Users/...`) in any codebase files, source code, comments, documentation, Markdown files, configuration files, Dockerfiles, or scripts. Always use relative repository paths to ensure portability across different developer environments and projects.
 
@@ -97,7 +102,7 @@ Tests ensure correctness, prevent regressions, and guide design. However, tests 
 - Tests are fast, clean, and directly verify the intended behavior
 - Only modified the minimal set of files needed to complete the task
 - All existing and new tests pass successfully
-- Dedicated infrastructure document updated if any infrastructure changes were made
+- Relevant documentation (`roadmap.md`, `INFRASTRUCTURE.md`, `README.md`) updated and committed if applicable before push
 - No hardcoded absolute local machine paths (e.g., `/Users/...`) in any file
 
 ## General Principles

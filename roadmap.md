@@ -39,3 +39,10 @@
 - Stacked independent switches for **Grammar** and **Orthography** with Thumbs Up / Down indicators.
 - Explanatory information tooltip on the **Linguistic Precision** header detailing NLP/spellchecker testing use cases.
 
+## 6. Automated Testing & TDD Suite
+### 6.1 Backend Generator & API Test Suite (`pytest`)
+- Exhaustive test suite covering CFG grammar engines, Markov generation, deck shuffling, stemmers, noise injection, and FastAPI endpoint schemas.
+- Integrated `make test` automated test target with sub-second feedback (~0.2s).
+- Pre-push documentation sync and verification workflow.
+
+

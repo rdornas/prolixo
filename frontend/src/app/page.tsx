@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import * as Tabs from "@radix-ui/react-tabs";
 import * as Select from "@radix-ui/react-select";
 import * as Slider from "@radix-ui/react-slider";
-import { ChevronDown, ChevronUp, Copy, Check, Sparkles, RefreshCw, Languages, FileText, AlignLeft, Type, Sun, Moon, Info, X, ThumbsUp, ThumbsDown, SpellCheck, Clock, Code2, AlertCircle, AlertTriangle } from "lucide-react";
+import { ChevronDown, Copy, Check, Sparkles, RefreshCw, Languages, FileText, AlignLeft, Type, Sun, Moon, Info, X, ThumbsUp, ThumbsDown, SpellCheck, Clock, Code2, AlertCircle, AlertTriangle } from "lucide-react";
 
 interface Language {
   code: string;
@@ -263,23 +263,17 @@ export default function Home() {
                       avoidCollisions={false}
                       className="overflow-hidden bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-xl z-50 w-[var(--radix-select-trigger-width)]"
                     >
-                      <Select.ScrollUpButton className="flex items-center justify-center h-6 bg-white dark:bg-zinc-900 text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 cursor-default">
-                        <ChevronUp className="w-4 h-4" />
-                      </Select.ScrollUpButton>
-                      <Select.Viewport className="p-1 max-h-[220px] overflow-y-auto">
+                      <Select.Viewport className="p-1.5 max-h-72 overflow-y-auto overscroll-contain custom-scrollbar scroll-smooth focus:outline-none">
                         {LANGUAGES.map((item) => (
                           <Select.Item
                             key={item.code}
                             value={item.code}
-                            className="flex items-center px-4 py-2.5 rounded-lg text-sm font-medium cursor-pointer select-none outline-none text-zinc-900 dark:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800 data-[state=checked]:bg-brand data-[state=checked]:text-white dark:data-[state=checked]:bg-brand dark:data-[state=checked]:text-white transition-colors"
+                            className="flex items-center px-3.5 py-2.5 rounded-lg text-sm font-medium cursor-pointer select-none outline-none text-zinc-900 dark:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800 data-[state=checked]:bg-brand data-[state=checked]:text-white dark:data-[state=checked]:bg-brand dark:data-[state=checked]:text-white transition-colors"
                           >
                             <Select.ItemText>{item.name}</Select.ItemText>
                           </Select.Item>
                         ))}
                       </Select.Viewport>
-                      <Select.ScrollDownButton className="flex items-center justify-center h-6 bg-white dark:bg-zinc-900 text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 cursor-default">
-                        <ChevronDown className="w-4 h-4" />
-                      </Select.ScrollDownButton>
                     </Select.Content>
                   </Select.Portal>
                 </Select.Root>
@@ -320,15 +314,12 @@ export default function Home() {
                         avoidCollisions={false}
                         className="overflow-hidden bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-xl z-50 w-[var(--radix-select-trigger-width)]"
                       >
-                        <Select.ScrollUpButton className="flex items-center justify-center h-6 bg-white dark:bg-zinc-900 text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 cursor-default">
-                          <ChevronUp className="w-4 h-4" />
-                        </Select.ScrollUpButton>
-                        <Select.Viewport className="p-1 max-h-[220px] overflow-y-auto">
+                        <Select.Viewport className="p-1.5 max-h-72 overflow-y-auto overscroll-contain custom-scrollbar scroll-smooth focus:outline-none">
                           {THEMES.map((item) => (
                             <Select.Item
                               key={item.code}
                               value={item.code}
-                              className="group flex flex-col px-4 py-2.5 rounded-lg text-sm cursor-pointer select-none outline-none text-zinc-900 dark:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800 data-[state=checked]:bg-brand data-[state=checked]:text-white dark:data-[state=checked]:bg-brand dark:data-[state=checked]:text-white transition-colors"
+                              className="group flex flex-col px-3.5 py-2.5 rounded-lg text-sm cursor-pointer select-none outline-none text-zinc-900 dark:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800 data-[state=checked]:bg-brand data-[state=checked]:text-white dark:data-[state=checked]:bg-brand dark:data-[state=checked]:text-white transition-colors"
                             >
                               <Select.ItemText className="font-semibold text-zinc-900 dark:text-zinc-100 group-data-[state=checked]:text-white dark:group-data-[state=checked]:text-white">
                                 {item.name}
@@ -339,9 +330,6 @@ export default function Home() {
                             </Select.Item>
                           ))}
                         </Select.Viewport>
-                        <Select.ScrollDownButton className="flex items-center justify-center h-6 bg-white dark:bg-zinc-900 text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 cursor-default">
-                          <ChevronDown className="w-4 h-4" />
-                        </Select.ScrollDownButton>
                       </Select.Content>
                     </Select.Portal>
                   </Select.Root>

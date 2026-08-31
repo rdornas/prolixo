@@ -113,3 +113,10 @@ clean: prune ## Remove containers, images, and orphaned volumes
 	@echo "$(COLOR_YELLOW)🧹 Cleaning Docker environment...$(COLOR_RESET)"
 	@$(DOCKER_COMPOSE) down --volumes --remove-orphans 2>/dev/null || true
 
+passo-curto: ## Automated short step: switch/create branch, stage changes, commit locally (make passo-curto BRANCH=... MSG=...)
+	@bash scripts/git_workflow.sh curto "$(BRANCH)" "$(MSG)"
+
+passo-longo: ## Automated long step: switch/create branch, commit, push, and open PR (make passo-longo BRANCH=... MSG=... [TITLE=...] [BODY=...])
+	@bash scripts/git_workflow.sh longo "$(BRANCH)" "$(MSG)" "$(TITLE)" "$(BODY)"
+
+

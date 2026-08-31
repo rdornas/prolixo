@@ -31,17 +31,7 @@ run-local: ## Fast native local dev server (API via venv + Frontend via next dev
 		echo "$(COLOR_YELLOW)⚡ Initializing Python venv for native mode...$(COLOR_RESET)"; \
 		$(MAKE) setup-dev; \
 	fi
-	@PORTS=$$(python3 -c 'import socket; \
-def get_free(start): \
-    for p in range(start, start + 100): \
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s: \
-            try: \
-                s.bind(("127.0.0.1", p)); \
-                return p; \
-            except OSError: \
-                continue; \
-    return start; \
-print(f"{get_free(8000)} {get_free(3000)}")'); \
+	@PORTS=$$(python3 scripts/find_ports.py 8000 3000); \
 	API_PORT=$$(echo $$PORTS | awk '{print $$1}'); \
 	WEB_PORT=$$(echo $$PORTS | awk '{print $$2}'); \
 	echo "$(COLOR_BOLD)🚀 Starting Prolixo natively in DEV mode (API + Frontend)...$(COLOR_RESET)"; \

@@ -68,6 +68,12 @@ Development follows **TDD (Test-Driven Development)**: every feature, fix, and b
    - All relevant documentation updates must be committed before pushing.
 7. **No Absolute Local Paths**:
    - **NEVER hardcode local machine absolute file paths** (e.g., `/Users/username/...`, `C:\Users\...`, `file:///Users/...`) in any codebase files, source code, comments, documentation, Markdown files, configuration files, Dockerfiles, or scripts. Always use relative repository paths to ensure portability across different developer environments and projects.
+8. **Sandbox Bypass & External Permission Requests**:
+   - Every time an action or command requires extrapolating or bypassing the sandbox (such as running commands with `BypassSandbox: true` or triggering an external permission prompt), you MUST output a visible explanation in the chat **BEFORE** triggering the tool call/modal. The explanation must detail:
+     1. *Action/Command*: The exact command or operation to be run.
+     2. *Justification*: Why sandbox extrapolation is strictly required (e.g., remote network connection for Git push, external authentication, etc.).
+     3. *Expected Outcome*: What the operation will accomplish once approved.
+
 
 ## Failure Modes
 1. Failing to truly understand the intent and only fixing surface issues.

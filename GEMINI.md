@@ -24,6 +24,11 @@ Tests that cannot prove necessity are not added by default.
    - Acceptance criteria
    - Scope not to be changed
 
+### Git & Branching Workflow (Passo Curto / Passo Longo)
+- **Main Branch is Sacred**: Direct commits or pushes to the `main` branch are strictly prohibited. All changes must go through dedicated feature/fix branches.
+- **"Passo Curto" (Short Step)**: Create/switch to a branch and commit the changes locally. (No push, no PR).
+- **"Passo Longo" (Long Step)**: Create/switch to a branch, commit the changes, push the branch to the remote repository, and open a Pull Request (PR) targeting `main`.
+
 ## Action Boundaries & Permissions
 1. **Pre-action Restatement**:
    - What the user truly wants

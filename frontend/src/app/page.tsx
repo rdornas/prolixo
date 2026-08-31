@@ -249,7 +249,7 @@ export default function Home() {
                     className="w-full flex items-center justify-between px-4 py-3 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-100/70 dark:bg-zinc-900/50 text-sm font-medium text-zinc-400 dark:text-zinc-500 cursor-not-allowed select-none"
                     title="Theme selection is not available for Latin"
                   >
-                    <span>—</span>
+                    <span>-</span>
                     <ChevronDown className="w-4 h-4 text-zinc-400 dark:text-zinc-600" />
                   </div>
                 ) : (

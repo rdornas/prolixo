@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Prolixo — AI Natural Language Placeholder Generator",
+  title: "Prolixo - AI Natural Language Placeholder Generator",
   description: "Generate realistic placeholder text paragraphs and sentences in multiple languages powered by statistical AI natural language generation.",
   icons: {
     icon: [

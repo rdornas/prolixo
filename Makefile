@@ -10,7 +10,7 @@ COLOR_BOLD   = \033[1m
 DOCKER_COMPOSE := $(shell if docker compose version >/dev/null 2>&1; then echo "docker compose"; elif command -v docker-compose >/dev/null 2>&1; then echo "docker-compose"; else echo "docker compose"; fi)
 
 help: ## Display this help menu
-	@echo "$(COLOR_BOLD)Prolixo — Local Management & Development$(COLOR_RESET)"
+	@echo "$(COLOR_BOLD)Prolixo - Local Management & Development$(COLOR_RESET)"
 	@echo ""
 	@echo "$(COLOR_YELLOW)Available commands:$(COLOR_RESET)"
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  $(COLOR_CYAN)%-15s$(COLOR_RESET) %s\n", $$1, $$2}'

@@ -1,4 +1,4 @@
-# Prolixo - Natural Language Placeholder Text Generator
+# Prolixo - Natural Multilanguage Placeholder Text Generator
 
 **Prolixo** is a professional, multilingual web application for generating placeholder text across three distinct output modes: **Words**, **Sentences**, and **Paragraphs**. The project is designed to be minimalist, robust, and elegant, built with **FastAPI** on the backend API and **Next.js** on the frontend with **Radix UI** primitives styled via the **`tailwindcss-radix`** plugin.
 

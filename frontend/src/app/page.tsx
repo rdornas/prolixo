@@ -157,7 +157,7 @@ export default function Home() {
             </div>
             <div>
               <h1 className="text-xl font-extrabold tracking-tight font-manrope text-zinc-900 dark:text-zinc-50">Prolixo</h1>
-              <p className="text-[10px] text-zinc-500 dark:text-zinc-400">natural language placeholder generator</p>
+              <p className="text-[10px] text-zinc-500 dark:text-zinc-400">natural multilanguage placeholder generator</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -330,17 +330,15 @@ export default function Home() {
                 <div className="flex flex-col gap-2.5">
                   {/* Grammar Switch */}
                   <div
-                    className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 transition-opacity ${
-                      isLatin ? "opacity-50 cursor-not-allowed" : ""
-                    }`}
+                    className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 transition-opacity ${isLatin ? "opacity-50 cursor-not-allowed" : ""
+                      }`}
                     title={isLatin ? "Not applicable for Latin (Lorem Ipsum)" : undefined}
                   >
                     <span className="text-xs font-semibold text-zinc-800 dark:text-zinc-200">Grammar</span>
                     <div className="flex items-center gap-1.5">
                       <ThumbsDown
-                        className={`w-3.5 h-3.5 transition-colors ${
-                          !grammarCorrect && !isLatin ? "text-amber-500" : "text-zinc-300 dark:text-zinc-600"
-                        }`}
+                        className={`w-3.5 h-3.5 transition-colors ${!grammarCorrect && !isLatin ? "text-amber-500" : "text-zinc-300 dark:text-zinc-600"
+                          }`}
                       />
                       <button
                         type="button"
@@ -348,49 +346,44 @@ export default function Home() {
                         disabled={isLatin}
                         aria-checked={grammarCorrect}
                         onClick={() => setGrammarCorrect(!grammarCorrect)}
-                        className={`relative inline-flex h-5 w-9 shrink-0 rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-brand ${
-                          isLatin
-                            ? "cursor-not-allowed bg-zinc-300 dark:bg-zinc-800"
-                            : grammarCorrect
+                        className={`relative inline-flex h-5 w-9 shrink-0 rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-brand ${isLatin
+                          ? "cursor-not-allowed bg-zinc-300 dark:bg-zinc-800"
+                          : grammarCorrect
                             ? "bg-brand cursor-pointer"
                             : "bg-zinc-300 dark:bg-zinc-700 cursor-pointer"
-                        }`}
+                          }`}
                         title={
                           isLatin
                             ? "Not applicable for Latin"
                             : grammarCorrect
-                            ? "Grammar: Correct (no duplicate/syntax errors)"
-                            : "Grammar: Injected errors enabled"
+                              ? "Grammar: Correct (no duplicate/syntax errors)"
+                              : "Grammar: Injected errors enabled"
                         }
                         aria-label="Toggle grammar correctness"
                       >
                         <span
-                          className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white dark:bg-zinc-100 shadow-md ring-0 transition duration-200 ease-in-out ${
-                            grammarCorrect ? "translate-x-4" : "translate-x-0"
-                          }`}
+                          className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white dark:bg-zinc-100 shadow-md ring-0 transition duration-200 ease-in-out ${grammarCorrect ? "translate-x-4" : "translate-x-0"
+                            }`}
                         />
                       </button>
                       <ThumbsUp
-                        className={`w-3.5 h-3.5 transition-colors ${
-                          grammarCorrect && !isLatin ? "text-brand" : "text-zinc-300 dark:text-zinc-600"
-                        }`}
+                        className={`w-3.5 h-3.5 transition-colors ${grammarCorrect && !isLatin ? "text-brand" : "text-zinc-300 dark:text-zinc-600"
+                          }`}
                       />
                     </div>
                   </div>
 
                   {/* Orthography Switch */}
                   <div
-                    className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 transition-opacity ${
-                      isLatin ? "opacity-50 cursor-not-allowed" : ""
-                    }`}
+                    className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 transition-opacity ${isLatin ? "opacity-50 cursor-not-allowed" : ""
+                      }`}
                     title={isLatin ? "Not applicable for Latin (Lorem Ipsum)" : undefined}
                   >
                     <span className="text-xs font-semibold text-zinc-800 dark:text-zinc-200">Orthography</span>
                     <div className="flex items-center gap-1.5">
                       <ThumbsDown
-                        className={`w-3.5 h-3.5 transition-colors ${
-                          !orthographyCorrect && !isLatin ? "text-amber-500" : "text-zinc-300 dark:text-zinc-600"
-                        }`}
+                        className={`w-3.5 h-3.5 transition-colors ${!orthographyCorrect && !isLatin ? "text-amber-500" : "text-zinc-300 dark:text-zinc-600"
+                          }`}
                       />
                       <button
                         type="button"
@@ -398,32 +391,29 @@ export default function Home() {
                         disabled={isLatin}
                         aria-checked={orthographyCorrect}
                         onClick={() => setOrthographyCorrect(!orthographyCorrect)}
-                        className={`relative inline-flex h-5 w-9 shrink-0 rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-brand ${
-                          isLatin
-                            ? "cursor-not-allowed bg-zinc-300 dark:bg-zinc-800"
-                            : orthographyCorrect
+                        className={`relative inline-flex h-5 w-9 shrink-0 rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-brand ${isLatin
+                          ? "cursor-not-allowed bg-zinc-300 dark:bg-zinc-800"
+                          : orthographyCorrect
                             ? "bg-brand cursor-pointer"
                             : "bg-zinc-300 dark:bg-zinc-700 cursor-pointer"
-                        }`}
+                          }`}
                         title={
                           isLatin
                             ? "Not applicable for Latin"
                             : orthographyCorrect
-                            ? "Orthography: Correct"
-                            : "Orthography: Injected spelling errors"
+                              ? "Orthography: Correct"
+                              : "Orthography: Injected spelling errors"
                         }
                         aria-label="Toggle orthography correctness"
                       >
                         <span
-                          className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white dark:bg-zinc-100 shadow-md ring-0 transition duration-200 ease-in-out ${
-                            orthographyCorrect ? "translate-x-4" : "translate-x-0"
-                          }`}
+                          className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white dark:bg-zinc-100 shadow-md ring-0 transition duration-200 ease-in-out ${orthographyCorrect ? "translate-x-4" : "translate-x-0"
+                            }`}
                         />
                       </button>
                       <ThumbsUp
-                        className={`w-3.5 h-3.5 transition-colors ${
-                          orthographyCorrect && !isLatin ? "text-brand" : "text-zinc-300 dark:text-zinc-600"
-                        }`}
+                        className={`w-3.5 h-3.5 transition-colors ${orthographyCorrect && !isLatin ? "text-brand" : "text-zinc-300 dark:text-zinc-600"
+                          }`}
                       />
                     </div>
                   </div>
@@ -578,7 +568,7 @@ export default function Home() {
       {/* Footer */}
       <footer className="shrink-0 border-t border-zinc-200 dark:border-zinc-800 py-3.5 bg-zinc-50 dark:bg-zinc-950/20">
         <div className="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between text-xs text-zinc-500 dark:text-zinc-500 gap-4">
-          <p>© 2026 Prolixo. natural language placeholder text generator for development and UI/UX design.</p>
+          <p>© 2026 Prolixo - Natural multilanguage placeholder text generator for development and UI/UX design.</p>
           <div className="flex gap-4 items-center">
             <button
               onClick={() => setShowAbout(true)}
@@ -645,7 +635,7 @@ export default function Home() {
                   🎯 Project Purpose
                 </h4>
                 <p className="text-xs text-zinc-600 dark:text-zinc-400">
-                  <strong>Prolixo</strong> is a natural language placeholder text generator built for development and UI/UX design. It produces structured, highly-variable, and realistic text blocks in English, French, Portuguese, Spanish, and classical Latin.
+                  <strong>Prolixo</strong> is a natural multilanguage placeholder text generator built for development and UI/UX design. It produces structured, highly-variable, and realistic text blocks in English, French, Portuguese, Spanish, and classical Latin.
                 </p>
               </div>
 
@@ -661,10 +651,6 @@ export default function Home() {
                   <li>
                     <strong className="text-zinc-900 dark:text-zinc-100 font-semibold">2. Corporate Bullshit Generators:</strong>{" "}
                     Inspired by early corporate buzzword engines (such as the classic Ada Corporate Bullshit Generator), adapted into a modernized, non-repetitive formal placeholder system.
-                  </li>
-                  <li>
-                    <strong className="text-zinc-900 dark:text-zinc-100 font-semibold">3. Postmodernism Generator:</strong>{" "}
-                    Created by Andrew C. Bulhak in 1996, which popularized the creation of domain-specific, grammatically convincing text generators.
                   </li>
                 </ul>
               </div>

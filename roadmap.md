@@ -4,6 +4,8 @@
 ### 1.1 Statistical & Context-Free Grammar (CFG) Combinatorial Engine
 ### 1.2 Multilingual Corpus Integration (Latin, Portuguese, English, Spanish, French)
 ### 1.3 Specialized Domain Lexicon & Themes (Business, Ecology, Law, Medicine, Mining, Politics, Technology)
+- High-register specialized vocabulary decks for 7 key professional domains in PT, EN, ES, and FR.
+- Theme-specific circumstantial intro deck isolation (`circ`) ensuring domain purity across generations.
 ### 1.4 Output Format Handlers (Words, Sentences, Paragraphs)
 ### 1.5 FastAPI REST Endpoints & Schema Validation
 

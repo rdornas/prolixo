@@ -2,8 +2,12 @@ import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : "https://prolixo.vercel.app");
+
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://prolixo.dev"),
+  metadataBase: new URL(siteUrl),
   title: "Prolixo - Natural Multilanguage Placeholder Generator",
   description: "Generate realistic placeholder text paragraphs and sentences in multiple languages powered by natural language generation.",
   icons: {

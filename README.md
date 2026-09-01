@@ -54,6 +54,7 @@ prolixo/
         └── app/
             ├── globals.css     # Global stylesheets and theme tokens (Light/Dark Mode)
             ├── layout.tsx      # Root HTML layout and metadata
+            ├── opengraph-image.png # Open Graph & social card preview image
             └── page.tsx        # Responsive Web SPA interface
 ```
 

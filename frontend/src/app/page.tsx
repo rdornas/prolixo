@@ -35,6 +35,73 @@ const THEMES: Theme[] = [
   { code: "technology", name: "Technology", description: "Software engineering, AI & cloud systems" }
 ];
 
+interface ScrollableSelectContentProps {
+  children: React.ReactNode;
+  maxHeight?: string;
+}
+
+function ScrollableSelectContent({
+  children,
+  maxHeight = "max-h-[240px]"
+}: ScrollableSelectContentProps) {
+  const [canScrollUp, setCanScrollUp] = useState(false);
+  const [canScrollDown, setCanScrollDown] = useState(false);
+  const viewportRef = React.useRef<HTMLDivElement>(null);
+
+  const checkScroll = useCallback(() => {
+    const el = viewportRef.current;
+    if (!el) return;
+    const hasScroll = el.scrollHeight > el.clientHeight + 2;
+    setCanScrollUp(el.scrollTop > 4);
+    setCanScrollDown(hasScroll && el.scrollTop + el.clientHeight < el.scrollHeight - 4);
+  }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(checkScroll, 50);
+    const interval = setInterval(checkScroll, 300);
+    return () => {
+      clearTimeout(timer);
+      clearInterval(interval);
+    };
+  }, [checkScroll]);
+
+  return (
+    <Select.Content
+      position="popper"
+      side="bottom"
+      sideOffset={4}
+      avoidCollisions={false}
+      className="relative overflow-hidden bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-xl z-50 w-[var(--radix-select-trigger-width)] animate-in fade-in-0 zoom-in-95 duration-100"
+    >
+      {/* Top Scroll Indicator */}
+      <div
+        className={`pointer-events-none absolute top-0 left-0 right-0 h-6 bg-gradient-to-b from-white dark:from-zinc-900 via-white/90 dark:via-zinc-900/90 to-transparent flex items-start justify-center pt-0.5 text-zinc-400 dark:text-zinc-500 z-10 transition-opacity duration-200 ${
+          canScrollUp ? "opacity-100" : "opacity-0"
+        }`}
+      >
+        <ChevronUp className="w-3.5 h-3.5" />
+      </div>
+
+      <Select.Viewport
+        ref={viewportRef}
+        onScroll={checkScroll}
+        className={`p-1.5 pr-1.5 ${maxHeight} overflow-y-auto overscroll-contain custom-scrollbar scroll-smooth focus:outline-none`}
+      >
+        {children}
+      </Select.Viewport>
+
+      {/* Bottom Scroll Indicator */}
+      <div
+        className={`pointer-events-none absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-white dark:from-zinc-900 via-white/95 dark:via-zinc-900/95 to-transparent flex items-end justify-center pb-1 text-zinc-400 dark:text-zinc-500 z-10 transition-opacity duration-200 ${
+          canScrollDown ? "opacity-100" : "opacity-0"
+        }`}
+      >
+        <ChevronDown className="w-3.5 h-3.5 animate-bounce" />
+      </div>
+    </Select.Content>
+  );
+}
+
 export default function Home() {
   const [lang, setLang] = useState<string>("en");
   const [domainTheme, setDomainTheme] = useState<string>("business");
@@ -256,31 +323,17 @@ export default function Home() {
                   </Select.Trigger>
 
                   <Select.Portal>
-                    <Select.Content
-                      position="popper"
-                      side="bottom"
-                      sideOffset={4}
-                      avoidCollisions={false}
-                      className="overflow-hidden bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-xl z-50 w-[var(--radix-select-trigger-width)]"
-                    >
-                      <Select.ScrollUpButton className="flex items-center justify-center h-6 bg-white dark:bg-zinc-900 text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 cursor-default">
-                        <ChevronUp className="w-4 h-4" />
-                      </Select.ScrollUpButton>
-                      <Select.Viewport className="p-1 max-h-[220px] overflow-y-auto">
-                        {LANGUAGES.map((item) => (
-                          <Select.Item
-                            key={item.code}
-                            value={item.code}
-                            className="flex items-center px-4 py-2.5 rounded-lg text-sm font-medium cursor-pointer select-none outline-none text-zinc-900 dark:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800 data-[state=checked]:bg-brand data-[state=checked]:text-white dark:data-[state=checked]:bg-brand dark:data-[state=checked]:text-white transition-colors"
-                          >
-                            <Select.ItemText>{item.name}</Select.ItemText>
-                          </Select.Item>
-                        ))}
-                      </Select.Viewport>
-                      <Select.ScrollDownButton className="flex items-center justify-center h-6 bg-white dark:bg-zinc-900 text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 cursor-default">
-                        <ChevronDown className="w-4 h-4" />
-                      </Select.ScrollDownButton>
-                    </Select.Content>
+                    <ScrollableSelectContent maxHeight="max-h-72">
+                      {LANGUAGES.map((item) => (
+                        <Select.Item
+                          key={item.code}
+                          value={item.code}
+                          className="flex items-center px-3.5 py-2.5 rounded-lg text-sm font-medium cursor-pointer select-none outline-none text-zinc-900 dark:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800 data-[state=checked]:bg-brand data-[state=checked]:text-white dark:data-[state=checked]:bg-brand dark:data-[state=checked]:text-white transition-colors"
+                        >
+                          <Select.ItemText>{item.name}</Select.ItemText>
+                        </Select.Item>
+                      ))}
+                    </ScrollableSelectContent>
                   </Select.Portal>
                 </Select.Root>
               </div>
@@ -313,36 +366,22 @@ export default function Home() {
                     </Select.Trigger>
 
                     <Select.Portal>
-                      <Select.Content
-                        position="popper"
-                        side="bottom"
-                        sideOffset={4}
-                        avoidCollisions={false}
-                        className="overflow-hidden bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-xl z-50 w-[var(--radix-select-trigger-width)]"
-                      >
-                        <Select.ScrollUpButton className="flex items-center justify-center h-6 bg-white dark:bg-zinc-900 text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 cursor-default">
-                          <ChevronUp className="w-4 h-4" />
-                        </Select.ScrollUpButton>
-                        <Select.Viewport className="p-1 max-h-[220px] overflow-y-auto">
-                          {THEMES.map((item) => (
-                            <Select.Item
-                              key={item.code}
-                              value={item.code}
-                              className="group flex flex-col px-4 py-2.5 rounded-lg text-sm cursor-pointer select-none outline-none text-zinc-900 dark:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800 data-[state=checked]:bg-brand data-[state=checked]:text-white dark:data-[state=checked]:bg-brand dark:data-[state=checked]:text-white transition-colors"
-                            >
-                              <Select.ItemText className="font-semibold text-zinc-900 dark:text-zinc-100 group-data-[state=checked]:text-white dark:group-data-[state=checked]:text-white">
-                                {item.name}
-                              </Select.ItemText>
-                              <span className="text-xs text-zinc-500 dark:text-zinc-400 group-data-[state=checked]:text-white/90 dark:group-data-[state=checked]:text-white/90">
-                                {item.description}
-                              </span>
-                            </Select.Item>
-                          ))}
-                        </Select.Viewport>
-                        <Select.ScrollDownButton className="flex items-center justify-center h-6 bg-white dark:bg-zinc-900 text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 cursor-default">
-                          <ChevronDown className="w-4 h-4" />
-                        </Select.ScrollDownButton>
-                      </Select.Content>
+                      <ScrollableSelectContent maxHeight="max-h-[245px]">
+                        {THEMES.map((item) => (
+                          <Select.Item
+                            key={item.code}
+                            value={item.code}
+                            className="group flex flex-col px-3.5 py-2.5 rounded-lg text-sm cursor-pointer select-none outline-none text-zinc-900 dark:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800 data-[state=checked]:bg-brand data-[state=checked]:text-white dark:data-[state=checked]:bg-brand dark:data-[state=checked]:text-white transition-colors"
+                          >
+                            <Select.ItemText className="font-semibold text-zinc-900 dark:text-zinc-100 group-data-[state=checked]:text-white dark:group-data-[state=checked]:text-white">
+                              {item.name}
+                            </Select.ItemText>
+                            <span className="text-xs text-zinc-500 dark:text-zinc-400 group-data-[state=checked]:text-white/90 dark:group-data-[state=checked]:text-white/90">
+                              {item.description}
+                            </span>
+                          </Select.Item>
+                        ))}
+                      </ScrollableSelectContent>
                     </Select.Portal>
                   </Select.Root>
                 )}

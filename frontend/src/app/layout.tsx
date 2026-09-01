@@ -3,6 +3,7 @@ import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://prolixo.dev"),
   title: "Prolixo - Natural Multilanguage Placeholder Generator",
   description: "Generate realistic placeholder text paragraphs and sentences in multiple languages powered by natural language generation.",
   icons: {

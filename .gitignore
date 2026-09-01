@@ -65,3 +65,6 @@ lerna-debug.log*
 .vscode/
 *.swp
 *.swo
+
+# AI & Assistant files
+GEMINI.md

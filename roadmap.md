@@ -34,6 +34,9 @@
 ### 4.2 Web App Favicon & Header SVG Integration
 ### 4.3 Multi-Resolution Raster PNG Generation (Favicons, Touch Icons, Chrome Assets)
 ### 4.4 Workspace Cleanup & Production Build Verification
+### 4.5 Open Graph & Social Preview Cards (WhatsApp, Teams, Slack, Twitter/X)
+- Standardized `1200 x 630 px` rich preview image asset (`frontend/src/app/opengraph-image.png`) with Prolixo branding and high contrast typography.
+- Next.js App Router `metadataBase` configuration and automated `og:image` / `twitter:image` HTML tag generation.
 
 ## 5. Linguistic Precision & Quality Noise Injection (NLP / Spellchecker Testing)
 ### 5.1 Deduplication & Contraction Collision Sanitization (Error-Free Mode)

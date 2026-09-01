@@ -12,6 +12,7 @@
 ## 2. Frontend User Interface & Experience
 ### 2.1 Next.js App Router Architecture & Tailwind CSS Setup
 ### 2.2 Accessible UI Controls with Radix UI (Language & Theme Selectors, Mode Tabs, Slider)
+- Dynamic non-intrusive scroll affordance and smooth native scrolling for theme and language dropdowns with subtle overlay gradients, custom scrollbar styling, and dynamic arrow indicators (`ScrollableSelectContent`).
 ### 2.3 Dynamic Text Viewer & Real-Time Copy-to-Clipboard
 ### 2.4 Light & Dark Mode System Theme Synchronization
 ### 2.5 About & Inspirations Modal with Historical References

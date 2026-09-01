@@ -201,6 +201,45 @@ def test_all_languages_and_themes_generation():
                 assert len(p.split()) > 5
 
 
+def test_no_consecutive_spaces_in_generated_content():
+    languages = ["pt", "en", "es", "fr", "la"]
+    themes = ["business", "ecology", "law", "medicine", "mining", "politics", "technology"]
+    for lang in languages:
+        for theme in themes:
+            sentences = generate_content(lang=lang, output_type="sentences", count=10, theme=theme)
+            for s in sentences:
+                assert "  " not in s
+                assert " ," not in s
+                assert " ." not in s
+                assert not s.startswith(" ")
+                assert not s.endswith(" ")
+
+            paragraphs = generate_content(lang=lang, output_type="paragraphs", count=3, theme=theme)
+            for p in paragraphs:
+                assert "  " not in p
+                assert " ," not in p
+                assert " ." not in p
+
+
+def test_portuguese_rocha_encaixante_feminine_agreement():
+    import re
+    # Verify that rocha encaixante is generated with feminine agreement only
+    for _ in range(100):
+        sentences = generate_content(lang="pt", output_type="sentences", count=10, theme="mining", grammar_correct=True)
+        for s in sentences:
+            s_lower = s.lower()
+            if "rocha encaixante" in s_lower:
+                assert not re.search(r'\bum rocha encaixante\b', s_lower)
+                assert not re.search(r'\bo rocha encaixante\b', s_lower)
+                assert not re.search(r'\bdo rocha encaixante\b', s_lower)
+                assert not re.search(r'\bno rocha encaixante\b', s_lower)
+                assert not re.search(r'\bpelo rocha encaixante\b', s_lower)
+                assert not re.search(r'\bdeste rocha encaixante\b', s_lower)
+                assert not re.search(r'\bneste rocha encaixante\b', s_lower)
+                assert not re.search(r'\bperante um rocha\b', s_lower)
+
+
+
 
 
 

@@ -75,9 +75,8 @@ function ScrollableSelectContent({
     >
       {/* Top Scroll Indicator */}
       <div
-        className={`pointer-events-none absolute top-0 left-0 right-0 h-6 bg-gradient-to-b from-white dark:from-zinc-900 via-white/90 dark:via-zinc-900/90 to-transparent flex items-start justify-center pt-0.5 text-zinc-400 dark:text-zinc-500 z-10 transition-opacity duration-200 ${
-          canScrollUp ? "opacity-100" : "opacity-0"
-        }`}
+        className={`pointer-events-none absolute top-0 left-0 right-0 h-6 bg-gradient-to-b from-white dark:from-zinc-900 via-white/90 dark:via-zinc-900/90 to-transparent flex items-start justify-center pt-0.5 text-zinc-400 dark:text-zinc-500 z-10 transition-opacity duration-200 ${canScrollUp ? "opacity-100" : "opacity-0"
+          }`}
       >
         <ChevronUp className="w-3.5 h-3.5" />
       </div>
@@ -92,13 +91,209 @@ function ScrollableSelectContent({
 
       {/* Bottom Scroll Indicator */}
       <div
-        className={`pointer-events-none absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-white dark:from-zinc-900 via-white/95 dark:via-zinc-900/95 to-transparent flex items-end justify-center pb-1 text-zinc-400 dark:text-zinc-500 z-10 transition-opacity duration-200 ${
-          canScrollDown ? "opacity-100" : "opacity-0"
-        }`}
+        className={`pointer-events-none absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-white dark:from-zinc-900 via-white/95 dark:via-zinc-900/95 to-transparent flex items-end justify-center pb-1 text-zinc-400 dark:text-zinc-500 z-10 transition-opacity duration-200 ${canScrollDown ? "opacity-100" : "opacity-0"
+          }`}
       >
         <ChevronDown className="w-3.5 h-3.5 animate-bounce" />
       </div>
     </Select.Content>
+  );
+}
+
+interface SelectionTooltipState {
+  count: number;
+  text: string;
+  top: number;
+  left: number;
+  visible: boolean;
+}
+
+function SelectionTooltip() {
+  const [tooltip, setTooltip] = useState<SelectionTooltipState>({
+    count: 0,
+    text: "",
+    top: 0,
+    left: 0,
+    visible: false,
+  });
+  const [copied, setCopied] = useState<boolean>(false);
+
+  const updateSelection = useCallback(() => {
+    const selection = window.getSelection();
+    if (!selection || selection.isCollapsed || selection.rangeCount === 0) {
+      setTooltip((prev) => (prev.visible ? { ...prev, visible: false } : prev));
+      setCopied(false);
+      return;
+    }
+
+    // Ensure selection is strictly inside the generated text container
+    const container = document.getElementById("generated-text-container");
+    if (!container) {
+      setTooltip((prev) => (prev.visible ? { ...prev, visible: false } : prev));
+      setCopied(false);
+      return;
+    }
+
+    const anchorNode = selection.anchorNode;
+    const focusNode = selection.focusNode;
+    if (!anchorNode || !focusNode || !container.contains(anchorNode) || !container.contains(focusNode)) {
+      setTooltip((prev) => (prev.visible ? { ...prev, visible: false } : prev));
+      setCopied(false);
+      return;
+    }
+
+    const text = selection.toString();
+    if (!text || text.length === 0) {
+      setTooltip((prev) => (prev.visible ? { ...prev, visible: false } : prev));
+      setCopied(false);
+      return;
+    }
+
+    const range = selection.getRangeAt(0);
+    let activeRect: DOMRect | null = null;
+
+    // Detect if selection is backwards (bottom-to-top or right-to-left)
+    const isBackwards = selection.anchorNode && selection.focusNode
+      ? (selection.anchorNode === selection.focusNode
+        ? selection.anchorOffset > selection.focusOffset
+        : Boolean(selection.anchorNode.compareDocumentPosition(selection.focusNode) & Node.DOCUMENT_POSITION_PRECEDING))
+      : false;
+
+    // 1. Try to get the exact active caret position where the cursor currently is
+    if (selection.focusNode) {
+      try {
+        const focusRange = document.createRange();
+        focusRange.setStart(selection.focusNode, selection.focusOffset);
+        focusRange.setEnd(selection.focusNode, selection.focusOffset);
+        const fRect = focusRange.getBoundingClientRect();
+        if (fRect && (fRect.height > 0 || fRect.width > 0 || fRect.top > 0)) {
+          activeRect = fRect;
+        }
+      } catch (e) {
+        // ignore
+      }
+    }
+
+    // 2. Fallback to line rects according to direction of selection
+    if (!activeRect || (activeRect.top === 0 && activeRect.bottom === 0 && activeRect.left === 0)) {
+      const clientRects = range.getClientRects();
+      if (clientRects.length > 0) {
+        activeRect = isBackwards ? clientRects[0] : clientRects[clientRects.length - 1];
+      } else {
+        activeRect = range.getBoundingClientRect();
+      }
+    }
+
+    if (!activeRect || (activeRect.width === 0 && activeRect.height === 0 && activeRect.top === 0 && activeRect.bottom === 0)) {
+      setTooltip((prev) => (prev.visible ? { ...prev, visible: false } : prev));
+      return;
+    }
+
+    const badgeHeight = 32;
+    const badgeWidth = 140;
+    const margin = 10;
+
+    let top = activeRect.top - badgeHeight - margin;
+    // If too close to viewport top, show below the active caret line
+    if (top < margin) {
+      if (activeRect.bottom + badgeHeight + margin < window.innerHeight) {
+        top = activeRect.bottom + margin;
+      } else {
+        top = margin;
+      }
+    }
+
+    // Position horizontally near the active selection cursor, clamped to viewport margins
+    let left = activeRect.left + (activeRect.width > 0 ? activeRect.width / 2 : 0);
+    left = Math.max(badgeWidth / 2 + margin, Math.min(window.innerWidth - badgeWidth / 2 - margin, left));
+
+    setTooltip({
+      count: text.length,
+      text,
+      top,
+      left,
+      visible: true,
+    });
+  }, []);
+
+  useEffect(() => {
+    document.addEventListener("selectionchange", updateSelection);
+    window.addEventListener("resize", updateSelection);
+    window.addEventListener("scroll", updateSelection, { capture: true });
+
+    return () => {
+      document.removeEventListener("selectionchange", updateSelection);
+      window.removeEventListener("resize", updateSelection);
+      window.removeEventListener("scroll", updateSelection, { capture: true });
+    };
+  }, [updateSelection]);
+
+  const handleCopySelection = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!tooltip.text) return;
+
+    try {
+      await navigator.clipboard.writeText(tooltip.text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error("Failed to copy selected text: ", err);
+    }
+  };
+
+  if (!tooltip.visible) return null;
+
+  return (
+    <div
+      className="fixed z-50 -translate-x-1/2 flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium shadow-xl backdrop-blur-md transition-all duration-100 bg-zinc-900/95 text-white dark:bg-zinc-100/95 dark:text-zinc-900 border border-zinc-700/60 dark:border-zinc-300/60 select-none animate-in fade-in zoom-in-95"
+      style={{
+        top: `${tooltip.top}px`,
+        left: `${tooltip.left}px`,
+      }}
+      onMouseDown={(e) => {
+        // Prevent clicking the badge container from deselecting the text
+        e.preventDefault();
+      }}
+      aria-live="polite"
+      aria-atomic="true"
+    >
+      <div className="flex items-center gap-1.5 pointer-events-none">
+        <span className="w-2 h-2 rounded-full bg-brand animate-pulse shrink-0" />
+        <span className="font-mono font-bold tabular-nums">
+          {tooltip.count.toLocaleString()}
+        </span>
+        <span className="text-[11px] opacity-80">
+          {tooltip.count === 1 ? "char" : "chars"}
+        </span>
+      </div>
+
+      <div className="h-3.5 w-px bg-zinc-700 dark:bg-zinc-300 mx-0.5" />
+
+      <button
+        type="button"
+        onClick={handleCopySelection}
+        onMouseDown={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }}
+        className="flex items-center gap-1 px-1.5 py-0.5 rounded-md hover:bg-zinc-800 dark:hover:bg-zinc-200 text-zinc-300 hover:text-white dark:text-zinc-600 dark:hover:text-zinc-900 transition-colors cursor-pointer text-[11px] font-semibold"
+        title="Copy selected text"
+        aria-label="Copy selected text"
+      >
+        {copied ? (
+          <>
+            <Check className="w-3 h-3 text-emerald-400 dark:text-emerald-600" />
+            <span className="text-emerald-400 dark:text-emerald-600">Copied!</span>
+          </>
+        ) : (
+          <>
+            <Copy className="w-3 h-3" />
+            <span>Copy</span>
+          </>
+        )}
+      </button>
+    </div>
   );
 }
 
@@ -648,7 +843,10 @@ export default function Home() {
             </div>
 
             {/* Results Body */}
-            <div className="flex-1 min-h-0 overflow-y-auto pr-2 text-zinc-800 dark:text-zinc-200 text-sm leading-relaxed space-y-4 select-text">
+            <div
+              id="generated-text-container"
+              className="flex-1 min-h-0 overflow-y-auto pr-2 text-zinc-800 dark:text-zinc-200 text-sm leading-relaxed space-y-4 select-text generated-text-content"
+            >
               {rateLimitSeconds !== null && rateLimitSeconds > 0 && (
                 <div className="flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/50 text-amber-800 dark:text-amber-300 text-xs font-medium animate-fadeIn">
                   <AlertTriangle className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
@@ -684,7 +882,7 @@ export default function Home() {
       {/* Footer */}
       <footer className="shrink-0 border-t border-zinc-200 dark:border-zinc-800 py-3.5 bg-zinc-50 dark:bg-zinc-950/20">
         <div className="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between text-xs text-zinc-500 dark:text-zinc-500 gap-4">
-          <p>© 2026 Prolixo - Natural multilanguage placeholder text generator for development and UI/UX design.</p>
+          <p>© 2026 Prolixo - Natural multilanguage placeholder text generator for web development and UI/UX design.</p>
           <div className="flex gap-4 items-center">
             <button
               onClick={() => setShowAbout(true)}
@@ -751,7 +949,7 @@ export default function Home() {
                   🎯 Project Purpose
                 </h4>
                 <p className="text-xs text-zinc-600 dark:text-zinc-400">
-                  <strong>Prolixo</strong> is a natural multilanguage placeholder text generator built for development and UI/UX design. It produces structured, highly-variable, and realistic text blocks in English, French, Portuguese, Spanish, and classical Latin.
+                  <strong>Prolixo</strong> is a natural multilanguage placeholder text generator built for web development and UI/UX design. It produces structured, highly-variable, and realistic text blocks in English, French, Portuguese, Spanish, and classical Latin.
                 </p>
               </div>
 
@@ -792,6 +990,9 @@ export default function Home() {
           </div>
         </div>
       )}
+
+      {/* Real-time Character Selection Counter Tooltip */}
+      <SelectionTooltip />
     </div>
   );
 }

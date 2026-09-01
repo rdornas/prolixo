@@ -169,7 +169,7 @@ THEME_DICTS = {
                 "teor de corte", "duto de rejeitos", "aluguel de equipamentos", "dique", "dique de contenção",
                 "estudo de estabilidade da cava", "engenheiro de registro", "estudo de ruptura hipotética",
                 "estudo de impacto ambiental", "descomissionamento de barragem", "talude de cava",
-                "alteamento a montante", "alteamento a jusante", "maciço rochoso", "rocha encaixante",
+                "alteamento a montante", "alteamento a jusante", "maciço rochoso",
                 "capeamento estéril", "empilhamento a seco", "piezômetro de corda vibrante", "radar interferométrico",
                 "duto minerário", "ensaio triaxial", "aproveitamento mineral"
             ],
@@ -180,7 +180,7 @@ THEME_DICTS = {
                 "cava", "zona de autossalvamento", "drenagem ácida de mina", "piezometria automatizada",
                 "recuperação metalúrgica", "análise de estabilidade de taludes", "frente de lavra",
                 "jazida aluvionar", "bacia de sedimentação", "bancada de lavra", "estabilidade geotécnica",
-                "sondagem a percussão", "segurança de barragens"
+                "sondagem a percussão", "segurança de barragens", "rocha encaixante"
             ],
             "n_mp": [
                 "rejeitos minerais", "teores de corte", "parâmetros geotécnicos", "corpos mineralizados",

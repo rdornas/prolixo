@@ -70,7 +70,8 @@ class CFGEngine:
         # Expand from root symbol "S"
         text = self.expand("S")
         # Post-processing spaces and punctuation
-        text = text.replace(" .", ".").replace(" ,", ",").replace("  ", " ").strip()
+        text = re.sub(r'\s+([.,])', r'\1', text)
+        text = re.sub(r'\s+', ' ', text).strip()
 
         if grammar_correct:
             # Collapse consecutive duplicate words (e.g. "a a" -> "a", "de de" -> "de")
@@ -223,7 +224,7 @@ romance_grammar = {
         ["S_BODY."]
     ],
     "INTRO": [["intro"]],
-    "CIRC_INTRO": [["circ,", " "]],
+    "CIRC_INTRO": [["circ,"]],
     "S_BODY": [
         ["NP_s", "VP_s"],
         ["NP_p", "VP_p"],
@@ -250,7 +251,7 @@ english_grammar = {
         ["S_BODY."]
     ],
     "INTRO": [["intro"]],
-    "CIRC_INTRO": [["circ,", " "]],
+    "CIRC_INTRO": [["circ,"]],
     "S_BODY": [
         ["NP_s", "VP_s"],
         ["NP_p", "VP_p"],

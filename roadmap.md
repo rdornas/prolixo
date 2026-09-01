@@ -23,6 +23,10 @@
 - Official circular GitHub repository navigation link integrated into the header alongside theme controls with brand color hover states.
 - Interactive Swagger API Documentation link (`/api/docs`) placed directly in the footer with `<Code2 />` icon.
 - Dynamic development port resolution (`scripts/find_ports.py`) preventing port collisions on `make run-local`.
+### 2.8 Custom Selection Styling & Real-Time Character Counter (Generated Text Scope)
+- Scoped transparent selection background with Prolixo primary brand color (`#ba5a31` / `#e59f71`) applied exclusively to generated text blocks (`.generated-text-content`), preserving default system selection for UI chrome and controls.
+- Floating real-time character count tooltip scoped strictly to the generated text viewer with active caret/cursor directional tracking (following top-to-bottom and bottom-to-top selections seamlessly).
+- Integrated inline copy button (`<Copy />` / `<Check />`) copying exclusively the highlighted text segment without breaking the active DOM selection.
 
 ## 3. Design System & Visual Identity
 ### 3.1 Official Color Palette Definition (Terracotta, Peach Sand, Mint Accent, Charcoal, Pure White)
@@ -39,9 +43,11 @@
 - Next.js App Router `metadataBase` configuration and automated `og:image` / `twitter:image` HTML tag generation.
 
 ## 5. Linguistic Precision & Quality Noise Injection (NLP / Spellchecker Testing)
-### 5.1 Deduplication & Contraction Collision Sanitization (Error-Free Mode)
+### 5.1 Deduplication, Whitespace & Contraction Collision Sanitization (Error-Free Mode)
 - Automated consecutive duplicate word collapse (e.g. eliminating accidental "a a", "mínimo mínimo", etc.).
+- Robust multi-space and punctuation spacing sanitization (`re.sub`) across all CFG structural productions (e.g., circumstance intro clauses).
 - Preposition-article and preposition-demonstrative collision resolution across Romance languages (`destes`, `neste`, `daquele`, `del`, `du`, `au`, etc.).
+- Strict gender taxonomy validation across specialized domain lexicons (e.g., feminine mining nouns like *"rocha encaixante"*).
 - Conciseness sanitization on formal introductions (e.g., replacing verbose *"Para além disso"* with concise *"Além disso"*).
 ### 5.2 Deterministic Error Injection Engine (`noise.py`)
 - **Grammatical Noise Engine**: Synthetic insertion of grammatical token duplications, subject-verb disagreement, number/gender mismatches, and stylistic/prolix redundancies (*"Para além disso"*) across PT, EN, ES, and FR inspired by LanguageTool rules.

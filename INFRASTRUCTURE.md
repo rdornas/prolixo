@@ -80,7 +80,7 @@ The project uses a [`Makefile`](Makefile) as the single control plane for local 
 ### Key Automation & Mechanics
 * **CLI Auto-Detection**: Automatically detects `docker compose` (v2 plugin) vs `docker-compose` (v1 CLI).
 * **Colima Lifecycle Check**: `check-colima` automatically checks if `colima` is installed and starts the background daemon if available.
-* **Dynamic Dev Port Allocation**: `make run-local` uses [`scripts/find_ports.py`](scripts/find_ports.py) to resolve available local TCP ports for API and Frontend without port collision errors.
+* **Dynamic Dev Port Allocation & Graceful Shutdown**: `make run-local` uses [`scripts/find_ports.py`](scripts/find_ports.py) to resolve available local TCP ports for API and Frontend without port collision errors, and traps `SIGINT`/`SIGTERM` to gracefully terminate both background processes without log leakage or exit code errors.
 
 ### Cross-Platform Compatibility
 * **Linux**: Linux systems run Docker Engine natively. The `Makefile` uses conditional checks (`command -v colima`), so on Linux systems where `colima` is not installed, all Colima steps are silently skipped. A Linux user simply needs standard Docker (`docker` + `docker compose`) installed and can run `make run-local` directly (or `docker compose up -d --build`).

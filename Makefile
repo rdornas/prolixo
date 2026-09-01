@@ -41,10 +41,17 @@ run-local: ## Fast native local dev server (API via venv + Frontend via next dev
 	echo "$(COLOR_GREEN)=================================================================$(COLOR_RESET)"; \
 	echo "$(COLOR_YELLOW)📡 Streaming live dev logs (Press Ctrl+C to stop both services)...$(COLOR_RESET)"; \
 	echo ""; \
-	trap 'kill 0' INT TERM EXIT; \
-		(cd api && API_PORT=$$API_PORT .venv/bin/python run.py) & \
-		(cd frontend && API_PORT=$$API_PORT PORT=$$WEB_PORT npm run dev -- -p $$WEB_PORT) & \
-		wait
+	cleanup() { \
+		trap "" INT TERM; \
+		kill "$$PID_API" "$$PID_WEB" 2>/dev/null || true; \
+		wait "$$PID_API" 2>/dev/null || true; \
+		wait "$$PID_WEB" 2>/dev/null || true; \
+		exit 0; \
+	}; \
+	trap cleanup INT TERM EXIT; \
+	(cd api && API_PORT=$$API_PORT .venv/bin/python run.py) & PID_API=$$!; \
+	(cd frontend && API_PORT=$$API_PORT PORT=$$WEB_PORT npm run dev -- -p $$WEB_PORT) & PID_WEB=$$!; \
+	wait
 
 run-dev: run-local ## Alias for run-local
 

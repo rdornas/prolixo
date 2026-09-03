@@ -46,20 +46,8 @@ a {
   color: #ba5a31 !important;
 }
 
-.generated-text-content ::-moz-selection,
-.generated-text-content::-moz-selection {
-  background-color: rgba(186, 90, 49, 0.03) !important;
-  color: #ba5a31 !important;
-}
-
 :root.dark .generated-text-content ::selection,
 :root.dark .generated-text-content::selection {
-  background-color: rgba(186, 90, 49, 0.03) !important;
-  color: #ba5a31 !important;
-}
-
-:root.dark .generated-text-content ::-moz-selection,
-:root.dark .generated-text-content::-moz-selection {
   background-color: rgba(186, 90, 49, 0.03) !important;
   color: #ba5a31 !important;
 }

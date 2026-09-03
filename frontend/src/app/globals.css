@@ -40,24 +40,28 @@ a {
 }
 
 /* Custom Text Selection: ONLY for generated text output */
-.generated-text-content ::selection {
-  background-color: transparent !important;
+.generated-text-content ::selection,
+.generated-text-content::selection {
+  background-color: rgba(186, 90, 49, 0.03) !important;
   color: #ba5a31 !important;
 }
 
-.generated-text-content ::-moz-selection {
-  background-color: transparent !important;
+.generated-text-content ::-moz-selection,
+.generated-text-content::-moz-selection {
+  background-color: rgba(186, 90, 49, 0.03) !important;
   color: #ba5a31 !important;
 }
 
-:root.dark .generated-text-content ::selection {
-  background-color: transparent !important;
-  color: #e59f71 !important;
+:root.dark .generated-text-content ::selection,
+:root.dark .generated-text-content::selection {
+  background-color: rgba(186, 90, 49, 0.03) !important;
+  color: #ba5a31 !important;
 }
 
-:root.dark .generated-text-content ::-moz-selection {
-  background-color: transparent !important;
-  color: #e59f71 !important;
+:root.dark .generated-text-content ::-moz-selection,
+:root.dark .generated-text-content::-moz-selection {
+  background-color: rgba(186, 90, 49, 0.03) !important;
+  color: #ba5a31 !important;
 }
 
 :root.dark a {

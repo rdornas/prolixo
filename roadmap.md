@@ -24,7 +24,7 @@
 - Interactive Swagger API Documentation link (`/api/docs`) placed directly in the footer with `<Code2 />` icon.
 - Dynamic development port resolution (`scripts/find_ports.py`) preventing port collisions on `make run-local`.
 ### 2.8 Custom Selection Styling & Real-Time Character Counter (Generated Text Scope)
-- Scoped transparent selection background with Prolixo primary brand color (`#ba5a31` / `#e59f71`) applied exclusively to generated text blocks (`.generated-text-content`), preserving default system selection for UI chrome and controls.
+- Scoped subtle selection background (`rgba(186, 90, 49, 0.03)` Terra 500 at 3% opacity) with primary brand Terra 500 text styling (`#ba5a31` on both light and dark) applied exclusively to generated text blocks (`.generated-text-content`), preserving default system selection for UI chrome and controls.
 - Floating real-time character count tooltip scoped strictly to the generated text viewer with active caret/cursor directional tracking (following top-to-bottom and bottom-to-top selections seamlessly).
 - Integrated inline copy button (`<Copy />` / `<Check />`) copying exclusively the highlighted text segment without breaking the active DOM selection.
 

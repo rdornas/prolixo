@@ -74,7 +74,7 @@ def test_generate_endpoint_invalid_language():
 
 
 def test_generate_endpoint_rate_limiting():
-    from app.limiter import limiter, INTERNAL_SECRET
+    from app.limiter import limiter
     limiter.reset()
 
     payload = {
@@ -87,12 +87,43 @@ def test_generate_endpoint_rate_limiting():
     }
     headers = {"X-Forwarded-For": "203.0.113.50"}
 
-    # Direct API limit is 10
-    for _ in range(10):
+    # Direct API limit is 30
+    for _ in range(30):
         res = client.post("/api/generate", json=payload, headers=headers)
         assert res.status_code == 200
 
-    # 11th request triggers 429
+    # 31st request triggers 429
+    res = client.post("/api/generate", json=payload, headers=headers)
+    assert res.status_code == 429
+    assert "Retry-After" in res.headers
+    data = res.json()
+    assert data["error"] == "too_many_requests"
+    assert "retry_after" in data
+
+
+def test_generate_endpoint_frontend_rate_limiting():
+    from app.limiter import limiter, INTERNAL_SECRET
+    limiter.reset()
+
+    payload = {
+        "lang": "en",
+        "type": "words",
+        "theme": "technology",
+        "count": 5,
+        "grammar_correct": True,
+        "orthography_correct": True
+    }
+    headers = {
+        "X-Internal-Secret": INTERNAL_SECRET,
+        "X-Forwarded-User-IP": "203.0.113.60"
+    }
+
+    # Frontend limit is 30
+    for _ in range(30):
+        res = client.post("/api/generate", json=payload, headers=headers)
+        assert res.status_code == 200
+
+    # 31st request triggers 429
     res = client.post("/api/generate", json=payload, headers=headers)
     assert res.status_code == 429
     assert "Retry-After" in res.headers

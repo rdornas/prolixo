@@ -73,7 +73,7 @@
 ## 8. Request Rate Limiting & Origin-Aware Abuse Prevention
 ### 8.1 In-Memory Zero-Dependency Sliding Window Limiter (`limiter.py`)
 - Independent sliding window rate tracking with zero third-party dependencies.
-- Origin differentiation: trusted frontend traffic vs. direct external API/script traffic.
+- Origin differentiation: trusted frontend traffic vs. direct external API/script traffic with unified default quota (30 req / 60s).
 - Transparent proxy IP extraction supporting `X-Forwarded-For` and `X-Forwarded-User-IP`.
 - Standard HTTP 429 status code, structured JSON response body, and `Retry-After` header.
 ### 8.2 Frontend Abuse Notice & Rate Limit Alert

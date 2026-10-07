@@ -41,7 +41,7 @@ The infrastructure stack is designed for lightweight, containerized execution us
   * `PORT=8000`: Application listening port.
   * `INTERNAL_API_SECRET`: Shared secret used to authenticate trusted frontend requests.
   * `RATE_LIMIT_FRONTEND`: Sliding window request limit for frontend web clients (default: 30).
-  * `RATE_LIMIT_DIRECT`: Sliding window request limit for direct API / script clients (default: 10).
+  * `RATE_LIMIT_DIRECT`: Sliding window request limit for direct API / script clients (default: 30).
   * `RATE_LIMIT_WINDOW`: Rate limiting sliding window duration in seconds (default: 60).
 * **Process Manager**: `uvicorn app.main:app --host 0.0.0.0 --port 8000`
 * **Restart Policy**: `unless-stopped`
@@ -117,6 +117,7 @@ The project uses a [`Makefile`](Makefile) as the single control plane for local 
 The repository includes native configuration for deploying the full monorepo stack to **Vercel** via [`vercel.json`](vercel.json):
 
 * **Multi-Service Architecture**: Configures independent services for Next.js (`frontend/`) and FastAPI (`api/`).
+* **Framework Specification**: Explicitly declares `"framework": "nextjs"` and `"framework": "fastapi"` in `services` to disambiguate framework detection from container Dockerfiles.
 * **Dependency Resolution**: Uses `frontend/.npmrc` (`legacy-peer-deps=true`) and `installCommand: "npm install --legacy-peer-deps"` to resolve React 19 / Lucide peer dependency contracts cleanly during cloud builds.
 * **API Entrypoint**: Directly connects Python ASGI application (`api/app/main.py` / `api/index.py`).
 * **Edge Rewrites**:

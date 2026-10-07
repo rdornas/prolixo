@@ -6,7 +6,7 @@ from fastapi import Request, HTTPException, status
 
 INTERNAL_SECRET = os.getenv("INTERNAL_API_SECRET", "prolixo_internal_client_secret")
 RATE_LIMIT_FRONTEND = int(os.getenv("RATE_LIMIT_FRONTEND", "30"))  # req / window
-RATE_LIMIT_DIRECT = int(os.getenv("RATE_LIMIT_DIRECT", "10"))      # req / window
+RATE_LIMIT_DIRECT = int(os.getenv("RATE_LIMIT_DIRECT", "30"))      # req / window
 RATE_LIMIT_WINDOW = int(os.getenv("RATE_LIMIT_WINDOW", "60"))      # in seconds
 
 

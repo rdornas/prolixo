@@ -20,6 +20,13 @@ def clean_records():
     yield
 
 
+def test_default_limits_are_equal_to_thirty():
+    limiter = InMemoryRateLimiter()
+    assert limiter.frontend_limit == 30
+    assert limiter.direct_limit == 30
+    assert limiter.window_seconds == 60
+
+
 def test_direct_api_rate_limit_exceeded():
     limiter = InMemoryRateLimiter(frontend_limit=10, direct_limit=3, window_seconds=60)
     app = create_test_app(limiter)

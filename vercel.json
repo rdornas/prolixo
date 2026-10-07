@@ -3,10 +3,12 @@
   "services": {
     "frontend": {
       "root": "frontend/",
+      "framework": "nextjs",
       "installCommand": "npm install --legacy-peer-deps"
     },
     "api": {
       "root": "api/",
+      "framework": "fastapi",
       "entrypoint": "app/main.py"
     }
   },

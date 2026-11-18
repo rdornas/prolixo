@@ -1,6 +1,6 @@
 # Prolixo - Natural Multilanguage Placeholder Text Generator
 
-**Prolixo** is a professional, multilingual web application for generating placeholder text across three distinct output modes: **Words**, **Sentences**, and **Paragraphs**. The project is designed to be minimalist, robust, and elegant, built with **FastAPI** on the backend API and **Next.js** on the frontend with **Radix UI** primitives styled via the **`tailwindcss-radix`** plugin.
+**Prolixo** is a professional, multilingual web application for generating placeholder text across three distinct output modes: **Words**, **Sentences**, and **Paragraphs**. The project is designed to be minimalist, robust, and elegant, built with **Go (`net/http` standard library)** on the backend API and **Next.js** on the frontend with **Radix UI** primitives styled via the **`tailwindcss-radix`** plugin.
 
 The text generation engine is **100% algorithmic, local, and deterministic-statistical**, executing entirely offline in the API without requiring external third-party AI APIs or internet connectivity.
 
@@ -17,33 +17,23 @@ prolixo/
 ├── README.md                   # Project documentation & reference guide
 ├── roadmap.md                  # Project milestones & completed roadmap
 │
-├── api/                        # FastAPI Backend API
-│   ├── app/
-│   │   ├── __init__.py
-│   │   ├── limiter.py          # Zero-dependency in-memory sliding window rate limiter
-│   │   ├── main.py             # API routes & CORS configuration
-│   │   ├── models.py           # Pydantic request/response schemas
-│   │   └── generator/          # Statistical natural language generation engine
-│   │       ├── __init__.py
-│   │       ├── engine.py       # CFG and Markov generation algorithms
-│   │       ├── noise.py        # Grammar and orthographical error injection engine
-│   │       └── dicts/          # Lexicon decks & domain corpora
-│   │           ├── __init__.py
-│   │           ├── pt.py       # Portuguese CFG grammatical decks (gender/number tagged nouns, verbs, adj)
-│   │           ├── en.py       # English CFG grammatical decks (singular/plural tagged nouns, verbs, adj)
-│   │           ├── es.py       # Spanish CFG grammatical decks (gender/number tagged nouns, verbs, adj)
-│   │           ├── fr.py       # French CFG grammatical decks (gender/number tagged nouns, verbs, adj)
-│   │           ├── la.py       # Classical Latin corpus sentences (Cicero) for Markov Chain generation
-│   │           └── themes.py   # Domain vocabulary overrides (Business, Ecology, Law, Medicine, Mining, Politics, Tech)
-│   ├── tests/                  # Automated test suite (pytest)
-│   │   ├── __init__.py
-│   │   ├── test_api.py         # FastAPI endpoint & schema tests
-│   │   ├── test_engine.py      # CFG, Markov & stemmer tests
-│   │   ├── test_limiter.py     # Rate limiting and origin isolation tests
-│   │   ├── test_models.py      # Pydantic schema validation tests
-│   │   └── test_noise.py       # Spelling & grammar corruption tests
-│   ├── requirements.txt        # Python dependencies
-│   └── run.py                  # API development server entry point
+├── api/                        # Go Backend API (zero external dependencies)
+│   ├── cmd/
+│   │   └── server/
+│   │       └── main.go         # Local & Docker HTTP server entrypoint
+│   ├── index.go                # Vercel Go Serverless Function entrypoint
+│   ├── go.mod                  # Go module definition (Go 1.22+)
+│   ├── Dockerfile              # Multi-stage Go -> Alpine container build
+│   └── internal/
+│       ├── limiter/            # In-memory sliding-window rate limiter & tests
+│       ├── models/             # Request/response structs, validation & tests
+│       ├── server/             # HTTP handlers, CORS, OpenAPI/Swagger & tests
+│       └── generator/          # Statistical natural language generation engine
+│           ├── dicts.go        # Embedded JSON lexicon loader (embed.FS)
+│           ├── engine.go       # CFG and Markov generation algorithms
+│           ├── noise.go        # Grammar and orthographical error injection engine
+│           ├── *_test.go       # Automated Go unit tests
+│           └── data/           # Lexicon decks & domain corpora (pt, en, es, fr, la, themes)
 │
 └── frontend/                   # Next.js Web Interface
     ├── package.json            # Dependencies (Next.js, React, Radix UI, Lucide)
@@ -64,13 +54,13 @@ prolixo/
 
 ### Option 1: Fast Local Development (Recommended)
 
-To spin up both the API (via Python virtual environment) and Frontend (Next.js dev server) natively in **~1 second** with live hot reloading:
+To spin up both the API (via `go run ./cmd/server`) and Frontend (Next.js dev server) natively in **~1 second** with live hot reloading:
 
 ```bash
 make run-local
 ```
 
-> **Note**: If `api/.venv` does not exist yet, `make run-local` will automatically create it and install all dependencies.
+> **Note**: Requires Go 1.22+ and Node.js installed locally.
 
 Access the running services:
 - **Frontend Web UI**: `http://localhost:3000`
@@ -95,7 +85,7 @@ make run-docker
 
 ### Option 3: Manual Step-by-Step Setup
 
-#### Step 1: Setup API Virtual Environment
+#### Step 1: Verify Go Toolchain
 ```bash
 make setup-dev
 ```
@@ -103,7 +93,7 @@ make setup-dev
 #### Step 2: Start Services Separately
 - **Backend API**:
   ```bash
-  cd api && .venv/bin/python run.py
+  cd api && go run ./cmd/server
   ```
 - **Frontend UI**:
   ```bash
@@ -114,7 +104,7 @@ make setup-dev
 
 ## 🧪 Running Automated Tests
 
-To execute the automated backend test suite (covering the CFG generator, Markov chains, stemmers, noise injectors, and FastAPI API contracts):
+To execute the automated backend test suite (covering the CFG generator, Markov chains, stemmers, noise injectors, and HTTP API contracts):
 
 ```bash
 make test
@@ -126,7 +116,7 @@ make test
 
 The project is configured for deployment to **Vercel** as a full-stack monorepo via [`vercel.json`](vercel.json):
 
-* Automatically routes `/api/*` traffic to the **FastAPI** backend service (`api/`).
+* Automatically routes `/api/*` traffic to the **Go** backend service (`api/index.go`).
 * Serves the **Next.js** application from the `frontend/` directory with static asset and SSR optimization.
 
 

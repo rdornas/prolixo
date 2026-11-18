@@ -21,7 +21,7 @@ The infrastructure stack is designed for lightweight, containerized execution us
             v                                                 v
   +--------------------+                            +--------------------+
   |  prolixo-frontend  |                            |    prolixo-api     |
-  | (Node 20 Alpine)   | --- depends_on (build) --->| (Python 3.12 Slim) |
+  | (Node 20 Alpine)   | --- depends_on (build) --->| (Go 1.22 / Alpine) |
   |     Port: 3000     |                            |     Port: 8000     |
   +--------------------+                            +--------------------+
 ```
@@ -32,18 +32,17 @@ The infrastructure stack is designed for lightweight, containerized execution us
 
 ### 2.1 API Service (`prolixo-api`)
 * **Source Path**: [`api/`](api)
-* **Dockerfile**: [`api/Dockerfile`](api/Dockerfile)
-* **Base Image**: `python:3.12-slim`
+* **Dockerfile**: [`api/Dockerfile`](api/Dockerfile) (Multi-stage build)
+  * **Stage 1 (builder)**: `golang:1.22-alpine`, compiles static binary `/prolixo-api` from `./cmd/server`.
+  * **Stage 2 (runner)**: `alpine:3.20`, copies compiled `/app/prolixo-api` binary.
 * **Exposed Port**: `8000` (mapped to host `8000:8000`)
 * **Environment Variables**:
-  * `PYTHONDONTWRITEBYTECODE=1`: Disables `.pyc` creation.
-  * `PYTHONUNBUFFERED=1`: Ensures unbuffered standard stdout/stderr streams.
-  * `PORT=8000`: Application listening port.
+  * `PORT=8000`: Application listening port (`API_PORT` also supported in local dev).
   * `INTERNAL_API_SECRET`: Shared secret used to authenticate trusted frontend requests.
   * `RATE_LIMIT_FRONTEND`: Sliding window request limit for frontend web clients (default: 30).
   * `RATE_LIMIT_DIRECT`: Sliding window request limit for direct API / script clients (default: 30).
   * `RATE_LIMIT_WINDOW`: Rate limiting sliding window duration in seconds (default: 60).
-* **Process Manager**: `uvicorn app.main:app --host 0.0.0.0 --port 8000`
+* **Process Manager**: `/app/prolixo-api`
 * **Restart Policy**: `unless-stopped`
 
 ### 2.2 Frontend Service (`prolixo-frontend`)
@@ -90,12 +89,12 @@ The project uses a [`Makefile`](Makefile) as the single control plane for local 
 ### Management Commands
 | Command | Action |
 | :--- | :--- |
-| `make run-local` | Launches fast native development server (API via `api/.venv` + Frontend via `next dev`) in ~1s. Auto-initializes `api/.venv` if missing. |
+| `make run-local` | Launches fast native development server (Go API via `go run ./cmd/server` + Frontend via `next dev`) in ~1s. |
 | `make run-dev` | Alias for `make run-local`. |
 | `make run-docker` | Checks Colima status (if present), starts Docker containers using existing built images (`docker compose up -d`), and streams logs. |
 | `make build-run` | Force rebuilds Docker images (`docker compose up -d --build`), launches containers, and streams logs. |
-| `make setup-dev` | Creates Python virtual environment at `api/.venv` and installs dependencies (`api/requirements.txt`). |
-| `make test` | Runs the automated backend test suite with `pytest` in sub-second time. |
+| `make setup-dev` | Verifies Go 1.22+ toolchain availability. |
+| `make test` | Runs the automated backend test suite with `go test -v ./...` in sub-second time. |
 | `make stop` | Stops container stack (`docker compose down`), prunes dangling images, and stops Colima if active. |
 | `make build` | Builds Docker images for API and Frontend without starting services. |
 | `make logs` | Streams live container logs. |
@@ -116,10 +115,10 @@ The project uses a [`Makefile`](Makefile) as the single control plane for local 
 
 The repository includes native configuration for deploying the full monorepo stack to **Vercel** via [`vercel.json`](vercel.json):
 
-* **Multi-Service Architecture**: Configures independent services for Next.js (`frontend/`) and FastAPI (`api/`).
-* **Framework Specification**: Explicitly declares `"framework": "nextjs"` and `"framework": "fastapi"` in `services` to disambiguate framework detection from container Dockerfiles.
+* **Multi-Service Architecture**: Configures independent services for Next.js (`frontend/`) and Go (`api/index.go`).
+* **Framework Specification**: Explicitly declares `"framework": "nextjs"` for `frontend/` and `"entrypoint": "index.go"` for `api/` to disambiguate detection from container Dockerfiles.
 * **Dependency Resolution**: Uses `frontend/.npmrc` (`legacy-peer-deps=true`) and `installCommand: "npm install --legacy-peer-deps"` to resolve React 19 / Lucide peer dependency contracts cleanly during cloud builds.
-* **API Entrypoint**: Directly connects Python ASGI application (`api/app/main.py` / `api/index.py`).
+* **API Entrypoint**: Directly connects Go Serverless Function (`api/index.go`).
 * **Edge Rewrites**:
   * `/api/(.*)` -> Routed directly to the `api` service.
   * `/(.*)` -> Routed to the `frontend` Next.js service.

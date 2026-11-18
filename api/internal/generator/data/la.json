@@ -1,6 +1,5 @@
-# Classical Latin Lorem Ipsum Dictionary (la)
-
-sentences = [
+{
+  "sentences": [
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     "Aenean interdum convallis ex, eget gravida nisl cursus id.",
     "Proin elementum dolor nec nisi feugiat, non hendrerit lacus laoreet.",
@@ -37,4 +36,5 @@ sentences = [
     "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.",
     "Integer porta est a erat facilisis, ac viverra ipsum hendrerit.",
     "Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae."
-]
+  ]
+}

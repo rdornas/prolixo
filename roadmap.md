@@ -7,7 +7,8 @@
 - High-register specialized vocabulary decks for 7 key professional domains in PT, EN, ES, and FR.
 - Theme-specific circumstantial intro deck isolation (`circ`) ensuring domain purity across generations.
 ### 1.4 Output Format Handlers (Words, Sentences, Paragraphs)
-### 1.5 FastAPI REST Endpoints & Schema Validation
+### 1.5 Go REST Endpoints, Schema Validation & Embedded Corpora
+- Zero-dependency Go `net/http` backend (`api/`) with embedded JSON lexicons (`embed.FS`), OpenAPI/Swagger UI, and full contract parity.
 
 ## 2. Frontend User Interface & Experience
 ### 2.1 Next.js App Router Architecture & Tailwind CSS Setup
@@ -60,14 +61,14 @@
 - Explanatory information tooltip on the **Linguistic Precision** header detailing NLP/spellchecker testing use cases.
 
 ## 6. Automated Testing & TDD Suite
-### 6.1 Backend Generator & API Test Suite (`pytest`)
-- Exhaustive test suite covering CFG grammar engines, Markov generation, deck shuffling, stemmers, noise injection, and FastAPI endpoint schemas.
-- Integrated `make test` automated test target with sub-second feedback (~0.2s).
+### 6.1 Backend Generator & API Test Suite (`go test`)
+- Exhaustive test suite covering CFG grammar engines, Markov generation, deck shuffling, stemmers, noise injection, rate limiting, and HTTP endpoint schemas.
+- Integrated `make test` automated test target with sub-second feedback.
 - Pre-push documentation sync and verification workflow.
 
 ## 7. Cloud Deployment & Production Hosting (Vercel)
 ### 7.1 Multi-Service Vercel Deployment Specification (`vercel.json`)
-- Multi-service deployment routing Next.js (`frontend/`) and FastAPI (`api/app/main.py`).
+- Multi-service deployment routing Next.js (`frontend/`) and Go (`api/index.go`).
 - Relative API base proxy configuration in Next.js development and production rewrites.
 
 ## 8. Request Rate Limiting & Origin-Aware Abuse Prevention

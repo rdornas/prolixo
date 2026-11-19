@@ -119,6 +119,25 @@ The project is configured for deployment to **Vercel** as a full-stack monorepo 
 * Automatically routes `/api/*` traffic to the **Go** backend service (`api/index.go`).
 * Serves the **Next.js** application from the `frontend/` directory with static asset and SSR optimization.
 
+---
+
+## ⚡ Raycast Extension (`raycast/`)
+
+Prolixo includes a native **Raycast** extension in [`raycast/`](raycast) that connects to the online Prolixo API (`https://prolixo.vercel.app` by default, configurable in Extension Preferences):
+
+```bash
+cd raycast
+npm install
+npm run dev
+```
+
+- **Generate Paragraphs** (`no-view`): Type the number of paragraphs inline (e.g. `3`) and press `Enter` to copy directly to clipboard.
+- **Generate Sentences** (`no-view`): Type the number of sentences inline and press `Enter` to copy directly to clipboard.
+- **Generate Words** (`no-view`): Type the number of words inline and press `Enter` to copy directly to clipboard.
+- **Generate Placeholder Text** (`view`): Interactive form to customize language, theme, and precision with preview.
+- **Extension Preferences** (`Cmd+,`): Set default Language, Theme, Grammar/Orthography precision, Quick Action (`Copy` or `Paste`), and API URL (`https://prolixo.vercel.app`).
+- **Run Unit Tests**: `cd raycast && npm test`
+
 
 
 

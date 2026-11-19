@@ -80,6 +80,13 @@
 ### 8.2 Frontend Abuse Notice & Rate Limit Alert
 - Frontend rate limit feedback banner with dynamic `Retry-After` wait notice and user-friendly error recovery.
 
+## 9. Raycast Extension (`raycast/`)
+### 9.1 Quick Inline Commands (`no-view`) & Extension Preferences
+- Inline `Generate Paragraphs`, `Generate Sentences`, and `Generate Words` commands with `count` argument and instant Copy-to-Clipboard (or Paste) execution.
+- Raycast Extension Preferences (`Cmd+,`) for default Language, Theme, Grammar/Orthography precision, Quick Action, and API URL (`https://prolixo.vercel.app`).
+### 9.2 Interactive Form & Detail Command
+- Interactive `Generate Placeholder Text` form supporting all 5 languages, 7 domain themes, output modes, and linguistic precision toggles with `LocalStorage` persistence.
+
 
 
 

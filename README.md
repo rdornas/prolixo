@@ -116,7 +116,7 @@ make test
 
 The project is configured for deployment to **Vercel** as a full-stack monorepo via [`vercel.json`](vercel.json):
 
-* Automatically routes `/api/*` traffic to the **Go** backend service (`api/index.go`).
+* Automatically routes `/api/*` traffic to the **Go** backend service (`api/cmd/server/main.go`).
 * Serves the **Next.js** application from the `frontend/` directory with static asset and SSR optimization.
 
 ---

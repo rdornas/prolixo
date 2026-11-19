@@ -39,17 +39,17 @@ declare namespace Preferences {
 declare namespace Arguments {
   /** Arguments passed to the `generate-paragraphs` command */
   export type GenerateParagraphs = {
-  /** No. of paragraphs */
+  /** No. of Paragraphs */
   "count": string
 }
   /** Arguments passed to the `generate-sentences` command */
   export type GenerateSentences = {
-  /** No. of sentences */
+  /** No. of Sentences */
   "count": string
 }
   /** Arguments passed to the `generate-words` command */
   export type GenerateWords = {
-  /** No. of words */
+  /** No. of Words */
   "count": string
 }
   /** Arguments passed to the `generate-text` command */

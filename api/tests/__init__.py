@@ -1,1 +1,0 @@
-# Prolixo API tests package

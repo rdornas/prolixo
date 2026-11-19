@@ -15,26 +15,21 @@ help: ## Display this help menu
 	@echo "$(COLOR_YELLOW)Available commands:$(COLOR_RESET)"
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  $(COLOR_CYAN)%-15s$(COLOR_RESET) %s\n", $$1, $$2}'
 
-setup-dev: ## Create Python virtual environment and install requirements
-	@echo "$(COLOR_CYAN)🐍 Setting up Python virtual environment in api/.venv...$(COLOR_RESET)"
-	@if [ ! -d "api/.venv" ]; then python3 -m venv api/.venv; fi
-	@api/.venv/bin/pip install -r api/requirements.txt
-	@echo "$(COLOR_GREEN)✅ venv ready at api/.venv.$(COLOR_RESET)"
+setup-dev: ## Verify Go toolchain and frontend dependencies
+	@echo "$(COLOR_CYAN)🔍 Checking Go toolchain...$(COLOR_RESET)"
+	@command -v go >/dev/null 2>&1 || { echo "Go is not installed. Please install Go 1.22+."; exit 1; }
+	@go version
+	@echo "$(COLOR_GREEN)✅ Go toolchain ready.$(COLOR_RESET)"
 
-test: ## Run automated backend test suite (pytest)
-	@echo "$(COLOR_CYAN)🧪 Running automated backend test suite (pytest)...$(COLOR_RESET)"
-	@if [ ! -d "api/.venv" ]; then $(MAKE) setup-dev; fi
-	@cd api && .venv/bin/pytest -v
+test: ## Run automated backend test suite (go test)
+	@echo "$(COLOR_CYAN)🧪 Running automated backend test suite (go test)...$(COLOR_RESET)"
+	@cd api && go test -v ./...
 
-run-local: ## Fast native local dev server (API via venv + Frontend via next dev, ~1s start)
-	@if [ ! -d "api/.venv" ]; then \
-		echo "$(COLOR_YELLOW)⚡ Initializing Python venv for native mode...$(COLOR_RESET)"; \
-		$(MAKE) setup-dev; \
-	fi
+run-local: ## Fast native local dev server (Go API + Frontend via next dev, ~1s start)
 	@PORTS=$$(python3 scripts/find_ports.py 8000 3000); \
 	API_PORT=$$(echo $$PORTS | awk '{print $$1}'); \
 	WEB_PORT=$$(echo $$PORTS | awk '{print $$2}'); \
-	echo "$(COLOR_BOLD)🚀 Starting Prolixo natively in DEV mode (API + Frontend)...$(COLOR_RESET)"; \
+	echo "$(COLOR_BOLD)🚀 Starting Prolixo natively in DEV mode (Go API + Frontend)...$(COLOR_RESET)"; \
 	echo "$(COLOR_GREEN)=================================================================$(COLOR_RESET)"; \
 	echo "  📌 $(COLOR_BOLD)Frontend Web:$(COLOR_RESET)       $(COLOR_CYAN)http://localhost:$$WEB_PORT$(COLOR_RESET)"; \
 	echo "  📌 $(COLOR_BOLD)Swagger API Docs:$(COLOR_RESET)   $(COLOR_CYAN)http://localhost:$$API_PORT/api/docs$(COLOR_RESET)"; \
@@ -46,10 +41,12 @@ run-local: ## Fast native local dev server (API via venv + Frontend via next dev
 		kill "$$PID_API" "$$PID_WEB" 2>/dev/null || true; \
 		wait "$$PID_API" 2>/dev/null || true; \
 		wait "$$PID_WEB" 2>/dev/null || true; \
+		rm -f /tmp/prolixo-api-dev; \
 		exit 0; \
 	}; \
 	trap cleanup INT TERM EXIT; \
-	(cd api && API_PORT=$$API_PORT .venv/bin/python run.py) & PID_API=$$!; \
+	(cd api && go build -o /tmp/prolixo-api-dev ./cmd/server) && \
+	API_PORT=$$API_PORT /tmp/prolixo-api-dev & PID_API=$$!; \
 	(cd frontend && API_PORT=$$API_PORT PORT=$$WEB_PORT npm run dev -- -p $$WEB_PORT) & PID_WEB=$$!; \
 	wait
 

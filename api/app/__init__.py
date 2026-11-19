@@ -1,1 +1,0 @@
-# Prolixo FastAPI package

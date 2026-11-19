@@ -33,6 +33,11 @@ describe("normalizeBaseUrl", () => {
   it("strips trailing slashes", () => {
     assert.equal(normalizeBaseUrl("https://prolixo.vercel.app///"), "https://prolixo.vercel.app");
   });
+
+  it("rejects non-http(s) or malformed URLs", () => {
+    assert.throws(() => normalizeBaseUrl("not-a-url"), /Invalid API Base URL/);
+    assert.throws(() => normalizeBaseUrl("javascript:alert(1)"), /protocol/);
+  });
 });
 
 describe("buildGeneratePayload", () => {
@@ -155,6 +160,61 @@ describe("generateText", () => {
         assert.ok(err instanceof ProlixoApiError);
         assert.equal(err.status, 429);
         assert.equal(err.retryAfter, 12);
+        return true;
+      },
+    );
+  });
+
+  it("rejects malformed 200 JSON without results array", async () => {
+    const mockFetch = (async () =>
+      new Response(JSON.stringify({ ok: true }), { status: 200 })) as typeof fetch;
+
+    await assert.rejects(
+      () =>
+        generateText(
+          undefined,
+          {
+            lang: "en",
+            type: "words",
+            theme: "business",
+            count: 5,
+            grammar_correct: true,
+            orthography_correct: true,
+          },
+          mockFetch,
+        ),
+      /Unexpected API response format/,
+    );
+  });
+
+  it("times out cleanly when fetch aborts", async () => {
+    const mockFetch = ((_input: Parameters<typeof fetch>[0], init?: RequestInit) =>
+      new Promise<Response>((_resolve, reject) => {
+        init?.signal?.addEventListener("abort", () => {
+          const err = new Error("Aborted");
+          err.name = "AbortError";
+          reject(err);
+        });
+      })) as typeof fetch;
+
+    await assert.rejects(
+      () =>
+        generateText(
+          undefined,
+          {
+            lang: "en",
+            type: "words",
+            theme: "business",
+            count: 5,
+            grammar_correct: true,
+            orthography_correct: true,
+          },
+          mockFetch,
+          10,
+        ),
+      (err: unknown) => {
+        assert.ok(err instanceof ProlixoApiError);
+        assert.equal(err.status, 408);
         return true;
       },
     );

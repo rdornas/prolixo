@@ -29,6 +29,7 @@ export interface GenerateResponse {
 }
 
 export const DEFAULT_API_URL = "https://prolixo.vercel.app";
+export const REQUEST_TIMEOUT_MS = 15_000;
 
 export const LANGUAGES: ReadonlyArray<{ code: LanguageCode; name: string }> = [
   { code: "pt", name: "Portuguese" },
@@ -95,7 +96,17 @@ export function normalizeBaseUrl(url?: string): string {
   if (!trimmed) {
     return DEFAULT_API_URL;
   }
-  return trimmed.replace(/\/+$/, "");
+  const cleaned = trimmed.replace(/\/+$/, "");
+  let parsed: URL;
+  try {
+    parsed = new URL(cleaned);
+  } catch {
+    throw new Error("Invalid API Base URL. Expected an http:// or https:// URL.");
+  }
+  if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
+    throw new Error("Invalid API Base URL protocol. Must be http:// or https://.");
+  }
+  return cleaned;
 }
 
 export function buildGeneratePayload(options: GenerateOptions): GenerateOptions {
@@ -128,18 +139,33 @@ export async function generateText(
   apiBaseUrl: string | undefined,
   options: GenerateOptions,
   fetchImpl: typeof fetch = fetch,
+  timeoutMs: number = REQUEST_TIMEOUT_MS,
 ): Promise<{ response: GenerateResponse; formattedText: string }> {
   const baseUrl = normalizeBaseUrl(apiBaseUrl);
   const payload = buildGeneratePayload(options);
 
-  const res = await fetchImpl(`${baseUrl}/api/generate`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
-    body: JSON.stringify(payload),
-  });
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+
+  let res: Response;
+  try {
+    res = await fetchImpl(`${baseUrl}/api/generate`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify(payload),
+      signal: controller.signal,
+    });
+  } catch (err) {
+    if (err instanceof Error && err.name === "AbortError") {
+      throw new ProlixoApiError(`Request timed out after ${Math.round(timeoutMs / 1000)}s.`, 408);
+    }
+    throw err;
+  } finally {
+    clearTimeout(timer);
+  }
 
   if (!res.ok) {
     let detail = `Request failed with status ${res.status}`;
@@ -176,9 +202,23 @@ export async function generateText(
     throw new ProlixoApiError(detail, res.status, retryAfter);
   }
 
-  const data = (await res.json()) as GenerateResponse;
+  const data = (await res.json()) as Partial<GenerateResponse>;
+  if (!Array.isArray(data?.results)) {
+    throw new ProlixoApiError("Unexpected API response format.", res.status);
+  }
+
+  const normalized: GenerateResponse = {
+    lang: data.lang ?? payload.lang,
+    type: data.type ?? payload.type,
+    theme: data.theme ?? payload.theme,
+    count: data.count ?? payload.count,
+    grammar_correct: data.grammar_correct ?? payload.grammar_correct,
+    orthography_correct: data.orthography_correct ?? payload.orthography_correct,
+    results: data.results,
+  };
+
   return {
-    response: data,
-    formattedText: formatResults(data.results, data.type),
+    response: normalized,
+    formattedText: formatResults(normalized.results, normalized.type),
   };
 }

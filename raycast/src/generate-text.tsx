@@ -23,6 +23,7 @@ import {
   THEMES,
   ThemeCode,
   generateText,
+  parseCountArg,
 } from "./api";
 
 interface Preferences {
@@ -53,6 +54,7 @@ function ResultDetail({
   const [isLoading, setIsLoading] = useState(false);
 
   async function handleRegenerate() {
+    if (isLoading) return;
     setIsLoading(true);
     const toast = await showToast({
       style: Toast.Style.Animated,
@@ -144,12 +146,16 @@ export default function Command() {
   }, []);
 
   async function runGeneration(pasteDirectly: boolean) {
-    const parsedCount = Number.parseInt(countStr.trim(), 10);
-    if (Number.isNaN(parsedCount) || parsedCount < 1 || parsedCount > 100) {
+    if (isLoading) return;
+
+    let parsedCount: number;
+    try {
+      parsedCount = parseCountArg(countStr, DEFAULT_OPTIONS.count);
+    } catch (err) {
       await showToast({
         style: Toast.Style.Failure,
         title: "Invalid count",
-        message: "Please enter a number between 1 and 100.",
+        message: err instanceof Error ? err.message : "Please enter a number between 1 and 100.",
       });
       return;
     }

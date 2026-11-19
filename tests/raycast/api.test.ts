@@ -8,7 +8,7 @@ import {
   generateText,
   normalizeBaseUrl,
   parseCountArg,
-} from "./api.ts";
+} from "../../raycast/src/api.ts";
 
 describe("parseCountArg", () => {
   it("uses fallback when empty", () => {

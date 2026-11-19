@@ -68,7 +68,7 @@
 
 ## 7. Cloud Deployment & Production Hosting (Vercel)
 ### 7.1 Multi-Service Vercel Deployment Specification (`vercel.json`)
-- Multi-service deployment routing Next.js (`frontend/`) and Go (`api/index.go`).
+- Multi-service deployment routing Next.js (`frontend/`) and Go (`api/cmd/server/main.go`).
 - Relative API base proxy configuration in Next.js development and production rewrites.
 
 ## 8. Request Rate Limiting & Origin-Aware Abuse Prevention

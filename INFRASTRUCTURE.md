@@ -115,10 +115,10 @@ The project uses a [`Makefile`](Makefile) as the single control plane for local 
 
 The repository includes native configuration for deploying the full monorepo stack to **Vercel** via [`vercel.json`](vercel.json):
 
-* **Multi-Service Architecture**: Configures independent services for Next.js (`frontend/`) and Go (`api/index.go`).
-* **Framework Specification**: Explicitly declares `"framework": "nextjs"` for `frontend/` and `"entrypoint": "index.go"` for `api/` to disambiguate detection from container Dockerfiles.
+* **Multi-Service Architecture**: Configures independent services for Next.js (`frontend/`) and Go (`api/cmd/server/main.go`).
+* **Framework Specification**: Explicitly declares `"framework": "nextjs"` for `frontend/` and `"framework": "go"` + `"entrypoint": "cmd/server/main.go"` for `api/` to disambiguate detection from container Dockerfiles.
 * **Dependency Resolution**: Uses `frontend/.npmrc` (`legacy-peer-deps=true`) and `installCommand: "npm install --legacy-peer-deps"` to resolve React 19 / Lucide peer dependency contracts cleanly during cloud builds.
-* **API Entrypoint**: Directly connects Go Serverless Function (`api/index.go`).
+* **API Entrypoint**: Connects Go HTTP server (`api/cmd/server/main.go`) listening on `PORT`.
 * **Edge Rewrites**:
   * `/api/(.*)` -> Routed directly to the `api` service.
   * `/(.*)` -> Routed to the `frontend` Next.js service.

@@ -13,7 +13,6 @@
     "resolveJsonModule": true,
     "allowImportingTsExtensions": true,
     "noEmit": true,
-    "baseUrl": ".",
     "paths": {
       "react": ["./node_modules/@raycast/api/node_modules/@types/react"],
       "react/*": ["./node_modules/@raycast/api/node_modules/@types/react/*"]

@@ -395,7 +395,9 @@ func ExtractContentWords(lang, theme string) []string {
 	seen := make(map[string]bool)
 	var words []string
 	for _, text := range rawSources {
-		for _, tok := range strings.Fields(text) {
+		for _, tok := range strings.FieldsFunc(text, func(r rune) bool {
+			return unicode.IsSpace(r) || r == '\'' || r == '’'
+		}) {
 			ct := cleanToken(tok)
 			if len([]rune(ct)) > 2 && !sw[ct] && !seen[ct] {
 				seen[ct] = true

@@ -24,6 +24,7 @@ func main() {
 		Addr:              ":" + port,
 		Handler:           server.NewHandler(lim),
 		ReadHeaderTimeout: 10 * time.Second,
+		ReadTimeout:       15 * time.Second,
 	}
 
 	log.Printf("Prolixo Go API listening on :%s", port)

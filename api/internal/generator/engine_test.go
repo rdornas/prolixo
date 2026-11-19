@@ -42,6 +42,13 @@ func TestExtractContentWords(t *testing.T) {
 			t.Fatalf("unexpected short word %q", w)
 		}
 	}
+
+	frWords := ExtractContentWords("fr", "technology")
+	for _, w := range frWords {
+		if strings.HasPrefix(w, "d") && strings.Contains(w, "innovation") && w != "innovation" {
+			t.Fatalf("unexpected merged elision token %q", w)
+		}
+	}
 }
 
 func TestGenerateContentAllLanguagesAndThemes(t *testing.T) {

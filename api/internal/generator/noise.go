@@ -107,14 +107,14 @@ func init() {
 		},
 		"fr": {
 			{`\bdéveloppement\b`, "dévelopement"},
-			{`\bévénement\b`, "évènement"},
+			{`(?:^|[^\p{L}\p{N}_])(événement)(?:$|[^\p{L}\p{N}_])`, "évènement"},
 			{`\bconnexion\b`, "connection"},
 			{`\blangage\b`, "language"},
 			{`\baccueil\b`, "acceuil"},
 			{`\bintéressant\b`, "interressant"},
 			{`\bchaque\b`, "chaques"},
 			{`\bparmi\b`, "parmis"},
-			{`\bmalgré\b`, "malgrés"},
+			{`(?:^|[^\p{L}\p{N}_])(malgré)(?:$|[^\p{L}\p{N}_])`, "malgrés"},
 		},
 	}
 
@@ -132,9 +132,12 @@ func init() {
 }
 
 func replaceFirst(re *regexp.Regexp, s, repl string) (string, bool) {
-	loc := re.FindStringIndex(s)
+	loc := re.FindStringSubmatchIndex(s)
 	if loc == nil {
 		return s, false
+	}
+	if len(loc) >= 4 && loc[2] >= 0 && loc[3] >= 0 {
+		return s[:loc[2]] + repl + s[loc[3]:], true
 	}
 	return s[:loc[0]] + repl + s[loc[1]:], true
 }

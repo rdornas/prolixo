@@ -37,6 +37,28 @@ func TestInjectSpellingNoiseFR(t *testing.T) {
 	}
 }
 
+func TestInjectSpellingNoiseFRUnicodeBoundaries(t *testing.T) {
+	// Direct rule matching for non-ASCII start/end words
+	for _, tc := range []struct {
+		in, want string
+	}{
+		{"événement majeur", "évènement majeur"},
+		{"malgré tout", "malgrés tout"},
+	} {
+		ruleList := spellingRules["fr"]
+		matched := false
+		for _, r := range ruleList {
+			if out, ok := replaceFirst(r.re, tc.in, r.repl); ok && out == tc.want {
+				matched = true
+				break
+			}
+		}
+		if !matched {
+			t.Fatalf("expected rule match for %q -> %q", tc.in, tc.want)
+		}
+	}
+}
+
 func TestInjectSpellingNoiseUnknownLang(t *testing.T) {
 	s := "Lorem ipsum dolor sit amet."
 	if res := InjectSpellingNoise(s, "la"); res != s {

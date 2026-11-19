@@ -41,10 +41,12 @@ run-local: ## Fast native local dev server (Go API + Frontend via next dev, ~1s 
 		kill "$$PID_API" "$$PID_WEB" 2>/dev/null || true; \
 		wait "$$PID_API" 2>/dev/null || true; \
 		wait "$$PID_WEB" 2>/dev/null || true; \
+		rm -f /tmp/prolixo-api-dev; \
 		exit 0; \
 	}; \
 	trap cleanup INT TERM EXIT; \
-	(cd api && API_PORT=$$API_PORT go run ./cmd/server) & PID_API=$$!; \
+	(cd api && go build -o /tmp/prolixo-api-dev ./cmd/server) && \
+	API_PORT=$$API_PORT /tmp/prolixo-api-dev & PID_API=$$!; \
 	(cd frontend && API_PORT=$$API_PORT PORT=$$WEB_PORT npm run dev -- -p $$WEB_PORT) & PID_WEB=$$!; \
 	wait
 

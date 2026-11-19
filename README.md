@@ -54,13 +54,13 @@ prolixo/
 
 ### Option 1: Fast Local Development (Recommended)
 
-To spin up both the API (via `go run ./cmd/server`) and Frontend (Next.js dev server) natively in **~1 second** with live hot reloading:
+To spin up both the Go API and Frontend (Next.js dev server with live hot reloading; API changes require restarting the server) natively in **~1 second**:
 
 ```bash
 make run-local
 ```
 
-> **Note**: Requires Go 1.22+ and Node.js installed locally.
+> **Note**: Requires Go 1.22+, Node.js, and Python 3 (used by `scripts/find_ports.py` to allocate free local ports).
 
 Access the running services:
 - **Frontend Web UI**: `http://localhost:3000`
